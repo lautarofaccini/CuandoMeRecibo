@@ -10,9 +10,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body>
         <main>
-          {children}
+          <h1>Navbar</h1>
+          <div className="h-[calc(100vh)-5rem] text-gray-800 container mx-auto">{children}</div>
         </main>
-        </body>
+      </body>
     </html>
   );
 }

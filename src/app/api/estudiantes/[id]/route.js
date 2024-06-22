@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { conn } from "@/libs/mysql";
 
-export async function GET({ params }) {
+export async function GET(request, { params }) {
   try {
     const res = await conn.query("SELECT * FROM estudiantes WHERE id = ?", [
       params.id,
@@ -22,7 +22,7 @@ export async function GET({ params }) {
   }
 }
 
-export async function DELETE({ params }) {
+export async function DELETE(request, { params }) {
   try {
     const res = await conn.query("DELETE FROM estudiantes WHERE id = ?", [
       params.id,
@@ -62,7 +62,10 @@ export async function PUT(request, { params }) {
         }
       );
     }
-    const updatedEst = await conn.query('SELECT * FROM estudiantes WHERE id = ?', [params.id])
+    const updatedEst = await conn.query(
+      "SELECT * FROM estudiantes WHERE id = ?",
+      [params.id]
+    );
     return NextResponse.json(updatedEst[0]);
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
