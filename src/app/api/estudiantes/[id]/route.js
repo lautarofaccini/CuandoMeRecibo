@@ -16,7 +16,12 @@ export async function GET(request, { params }) {
         }
       );
     }
-    return NextResponse.json(res[0]);
+    
+    // Formatear la fecha
+    const estudiante = res[0];
+    estudiante.fechaNac = estudiante.fechaNac.toISOString().split('T')[0];
+
+    return NextResponse.json(estudiante);
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }

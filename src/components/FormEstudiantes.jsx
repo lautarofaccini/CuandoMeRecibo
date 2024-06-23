@@ -1,19 +1,20 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import axios from "axios";
-import {useRouter} from 'next/navigation'
+import { useRouter, useParams } from "next/navigation";
 
 function FormEstudiantes() {
   const [estudiante, setEstudiante] = useState({
-    dni: 0,
+    dni: "",
     nombre: "",
     apellido: "",
-    fechaNac: null,
+    fechaNac: "",
   });
 
   const form = useRef(null);
-const router = useRouter()
+  const router = useRouter();
+  const params = useParams();
 
   const handleChange = (e) => {
     setEstudiante({
@@ -21,11 +22,36 @@ const router = useRouter()
       [e.target.name]: e.target.value,
     });
   };
+
+  useEffect(() => {
+    if (params.id) {
+      axios.get(`/api/estudiantes/${params.id}`).then((res) => {
+        setEstudiante({
+          dni: res.data.dni,
+          nombre: res.data.nombre,
+          apellido: res.data.apellido,
+          fechaNac: res.data.fechaNac,
+        });
+      });
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const res = await axios.post("/api/estudiantes", estudiante);
+
+    if (!params.id) {
+      const res = await axios.post("/api/estudiantes", estudiante);
+    } else {
+      const res = await axios.put("/api/estudiantes/" + params.id, estudiante);
+    }
     form.current.reset();
-    router.push('/estudiantes')
+    router.push("/estudiantes");
+    router.refresh();
+  };
+
+  const formatearFecha = (datetime) => {
+    if (!datetime) return "";
+    return datetime.split("T")[0];
   };
   return (
     <form
@@ -47,6 +73,7 @@ const router = useRouter()
         type="text"
         placeholder="XXXXXXXX"
         onChange={handleChange}
+        value={estudiante.dni}
         className="shadow text-black appearance-none border rounded w-full py-2 px-3"
         autoFocus
       />
@@ -62,6 +89,7 @@ const router = useRouter()
         type="text"
         placeholder="Nombre"
         onChange={handleChange}
+        value={estudiante.nombre}
         className="shadow text-black appearance-none border rounded w-full py-2 px-3"
       />
 
@@ -76,6 +104,7 @@ const router = useRouter()
         type="text"
         placeholder="Apellido"
         onChange={handleChange}
+        value={estudiante.apellido}
         className="shadow text-black appearance-none border rounded w-full py-2 px-3"
       />
 
@@ -89,6 +118,7 @@ const router = useRouter()
         name="fechaNac"
         type="date"
         onChange={handleChange}
+        value={estudiante.fechaNac}
         className="shadow text-black appearance-none border rounded w-full py-2 px-3"
       />
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">
