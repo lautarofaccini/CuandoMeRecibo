@@ -59,7 +59,7 @@ function FormEstudiantes() {
       onSubmit={handleSubmit}
       ref={form}
     >
-      <h1 className="block text-gray-700 text-sm font-bold mb-2">
+      <h1 className="block text-slate-900 text-xl font-bold mb-2">
         Nuevo Estudiante
       </h1>
       <label
@@ -74,7 +74,7 @@ function FormEstudiantes() {
         placeholder="XXXXXXXX"
         onChange={handleChange}
         value={estudiante.dni}
-        className="shadow text-black appearance-none border rounded w-full py-2 px-3"
+        className="shadow text-black appearance-none border rounded w-full py-2 px-3 mb-1"
         autoFocus
       />
 
@@ -90,7 +90,7 @@ function FormEstudiantes() {
         placeholder="Nombre"
         onChange={handleChange}
         value={estudiante.nombre}
-        className="shadow text-black appearance-none border rounded w-full py-2 px-3"
+        className="shadow text-black appearance-none border rounded w-full py-2 px-3 mb-1"
       />
 
       <label
@@ -105,7 +105,7 @@ function FormEstudiantes() {
         placeholder="Apellido"
         onChange={handleChange}
         value={estudiante.apellido}
-        className="shadow text-black appearance-none border rounded w-full py-2 px-3"
+        className="shadow text-black appearance-none border rounded w-full py-2 px-3 mb-1"
       />
 
       <label
