@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import ButtonNuevo from "./ButtonNuevo";
 
 function Navbar() {
   const pathname = usePathname();
@@ -13,19 +14,28 @@ function Navbar() {
           <Link href="/">Cuando Me Recibo?</Link>
         </h3>
         <ul className="flex gap-x-4 text-2xl font-bold text-sky-500">
-          <li>
-            {!(pathname === "/estudiantes") ? (
+          {!(pathname === "/estudiantes") &&
+          !pathname.startsWith("/materias") ? (
+            <li>
               <Link href="/estudiantes" className=" hover:text-sky-400">
                 Estudiantes
               </Link>
-            ) : null}
-          </li>
-          {pathname.startsWith("/estudiantes") &&
-          pathname !== "/estudiantes/new" ? (
+            </li>
+          ) : null}
+          {!(pathname === "/materias") &&
+          !pathname.startsWith("/estudiantes") ? (
             <li>
-              <Link href="/estudiantes/new" className=" hover:text-sky-400">
-                Nuevo
+              <Link href="/materias" className=" hover:text-sky-400">
+                Materias
               </Link>
+            </li>
+          ) : null}
+          {console.log(!pathname.endsWith("/new"))}
+          {(pathname.startsWith("/materias") ||
+            pathname.startsWith("/estudiantes")) &&
+          !pathname.endsWith("/new") ? (
+            <li>
+              <ButtonNuevo pathname={pathname} />
             </li>
           ) : null}
         </ul>
