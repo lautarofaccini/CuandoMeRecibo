@@ -13,17 +13,21 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const { id, asignatura, nivel } = await request.json();
+    const { id, asignatura, nivel, dictado, plan } = await request.json();
     const res = await conn.query("INSERT INTO materias SET ?", {
       id,
       asignatura,
-      nivel
+      nivel,
+      dictado,
+      plan
     });
     
     return NextResponse.json({
         id,
         asignatura,
-        nivel
+        nivel,
+        dictado,
+        plan
     });
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
