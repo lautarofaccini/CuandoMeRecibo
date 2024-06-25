@@ -19,7 +19,13 @@ async function MateriaPage({ params }) {
         {materia.dictado ? <p>Dictado: {materia.dictado}</p> : null}
         {materia.plan ? <p>Plan: {materia.plan}</p> : null}
         <Buttons materiaId={materia.id} />
+        
       </div>
+
+      <div>
+
+      </div>
+
     </section>
   );
 }
