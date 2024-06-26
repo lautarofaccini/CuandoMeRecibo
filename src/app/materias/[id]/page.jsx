@@ -1,5 +1,7 @@
 import axios from "axios";
 import Buttons from "./Buttons";
+import FormRegulares from "@/components/FormRegulares";
+import { Button } from "@nextui-org/react";
 
 async function loadMateria(materiaId) {
   const { data } = await axios.get(
@@ -11,7 +13,7 @@ async function loadMateria(materiaId) {
 async function MateriaPage({ params }) {
   const materia = await loadMateria(params.id);
   return (
-    <section className="flex justify-center items-center">
+    <section className="flex justify-center items-center gap-x-4">
       <div className="p-6 bg-white rounded">
         <p>Numero de materia: {materia.id}</p>
         <p>Nombre de materia: {materia.asignatura}</p>
@@ -19,6 +21,10 @@ async function MateriaPage({ params }) {
         {materia.dictado ? <p>Dictado: {materia.dictado}</p> : null}
         {materia.plan ? <p>Plan: {materia.plan}</p> : null}
         <Buttons materiaId={materia.id} />
+      </div>
+      <div className="flex p-6 bg-slate-500 rounded">
+        <FormRegulares />
+        <Button className=" mt-3">Guardar</Button>
       </div>
     </section>
   );

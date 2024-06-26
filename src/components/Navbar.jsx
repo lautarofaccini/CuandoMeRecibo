@@ -30,7 +30,6 @@ function Navbar() {
               </Link>
             </li>
           ) : null}
-          {console.log(!pathname.endsWith("/new"))}
           {(pathname.startsWith("/materias") ||
             pathname.startsWith("/estudiantes")) &&
           !pathname.endsWith("/new") ? (
