@@ -1,7 +1,6 @@
 import axios from "axios";
 import Buttons from "./Buttons";
 import FormRegulares from "@/components/FormRegulares";
-import { Button } from "@nextui-org/react";
 
 async function loadMateria(materiaId) {
   const { data } = await axios.get(
@@ -22,9 +21,8 @@ async function MateriaPage({ params }) {
         {materia.plan ? <p>Plan: {materia.plan}</p> : null}
         <Buttons materiaId={materia.id} />
       </div>
-      <div className="flex p-6 bg-slate-500 rounded">
-        <FormRegulares />
-        <Button className=" mt-3">Guardar</Button>
+      <div className="p-6 bg-slate-500 rounded">
+        <FormRegulares idPadre={materia.id}/>
       </div>
     </section>
   );

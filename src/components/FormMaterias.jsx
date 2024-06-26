@@ -51,7 +51,6 @@ function FormMaterias() {
     if (data.plan) {
       data.plan = Number(data.plan);
     }
-    console.log(data);
     if (!params.id) {
       const res = await axios.post("/api/materias", data);
     } else {

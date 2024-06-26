@@ -7,26 +7,36 @@ export async function GET(request) {
     const idAnteces = searchParams.get("id1");
     const idSuces = searchParams.get("id2");
 
-    let res; 
+    let res;
+
     if (idAnteces && idSuces) {
+      // Caso: Ambos parámetros presentes
       res = await conn.query(
         "SELECT * FROM regularizada WHERE idAnteces = ? AND idSuces = ?",
         [idAnteces, idSuces]
       );
-      if (res.length === 0) {
-        return NextResponse.json(
-          {
-            message: "Relacion no encontrada",
-          },
-          {
-            status: 404,
-          }
-        );
-      }
-      
+    } else if (idAnteces) {
+      // Caso: Solo idAnteces presente
+      res = await conn.query("SELECT * FROM regularizada WHERE idAnteces = ?", [idAnteces]);
+    } else if (idSuces) {
+      // Caso: Solo idSuces presente
+      res = await conn.query("SELECT * FROM regularizada WHERE idSuces = ?", [idSuces]);
     } else {
+      // Caso: Sin parámetros, obtener todas las filas
       res = await conn.query("SELECT * FROM regularizada");
     }
+
+    if (res.length === 0) {
+      return NextResponse.json(
+        {
+          message: "Relación no encontrada",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+
     return NextResponse.json(res);
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
