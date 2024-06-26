@@ -1,10 +1,32 @@
 import { conn } from "@/libs/mysql";
 import { NextResponse } from "next/server";
 
-// TODO: Hacer que este get tambien pueda recibir dos ids para devolver una columna especifica
-export async function GET() {
+export async function GET(request) {
   try {
-    const res = await conn.query("SELECT * FROM regularizada");
+    const { searchParams } = new URL(request.url);
+    const idAnteces = searchParams.get("id1");
+    const idSuces = searchParams.get("id2");
+
+    let res; 
+    if (idAnteces && idSuces) {
+      res = await conn.query(
+        "SELECT * FROM regularizada WHERE idAnteces = ? AND idSuces = ?",
+        [idAnteces, idSuces]
+      );
+      if (res.length === 0) {
+        return NextResponse.json(
+          {
+            message: "Relacion no encontrada",
+          },
+          {
+            status: 404,
+          }
+        );
+      }
+      
+    } else {
+      res = await conn.query("SELECT * FROM regularizada");
+    }
     return NextResponse.json(res);
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
