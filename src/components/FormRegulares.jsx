@@ -45,25 +45,37 @@ function FormRegulares({ idPadre }) {
   }
 
   async function updateRegular(nuevoId, viejoId) {
-    console.log("actualizado: este ", viejoId, " por este ", nuevoId);
     const data = {
       idAnteces: nuevoId,
     };
-    console.log(data);
     const res = await axios.put(
       "/api/regularizada?id1=" + viejoId + "&id2=" + idPadre,
       data
     );
-    console.log(res.data);
     return res.data;
   }
 
-  function createRegular(nuevoId) {
-    console.log("creado: ", nuevoId);
+  async function createRegular(nuevoId) {
+    const data = {
+      idAnteces: nuevoId,
+      idSuces: idPadre
+    };
+    const res = await axios.post(
+      "/api/regularizada",
+      data
+    );
+    return res.data;
   }
 
-  function deleteRegular(nuevoId) {
-    console.log("borrado: ", nuevoId);
+  async function deleteRegular(idElim) {
+    const res = await axios.delete(
+      "/api/regularizada?id1=" + idElim + "&id2=" + idPadre
+    );
+    if (res.status !== 204) {
+      console.log(
+        "Error al eliminar materia: ", res
+      )
+    }
   }
 
   const handleSubmit = async (e) => {
@@ -81,21 +93,21 @@ function FormRegulares({ idPadre }) {
       const regAux = regularizada.filter(
         (elemento) => !data.includes(elemento)
       );
-      const Iguales = regularizada.filter(
-        (elemento) => data.includes(elemento)
+      const Iguales = regularizada.filter((elemento) =>
+        data.includes(elemento)
       );
       let regSal = [];
       for (let i = 0; i < Iguales.length; i++) {
         regSal.push({
           idAnteces: Iguales[i],
-          idSuces: idPadre
-        })
+          idSuces: idPadre,
+        });
       }
       if (dataAux.length !== regAux.length) {
         if (dataAux.length > regAux.length) {
           let dLenght = dataAux.length;
           for (let i = 0; i < dLenght - regAux.length; i++) {
-            createRegular(dataAux[0]);
+            regSal.push(createRegular(dataAux[0]));
             dataAux.shift();
           }
         } else {
@@ -115,8 +127,7 @@ function FormRegulares({ idPadre }) {
       }
       // Esperar a que todas las promesas se resuelvan
       regSal = await Promise.all(regSal);
-      setRegularizada((regSal.map((reg) => reg.idAnteces)).sort((a, b) => a - b));
-      router.refresh();
+      setRegularizada(regSal.map((reg) => reg.idAnteces).sort((a, b) => a - b));
       //TODO: Testear con mas convinaciones
     }
   };

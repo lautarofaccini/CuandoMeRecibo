@@ -8,40 +8,53 @@ export async function GET(request) {
     const idSuces = searchParams.get("id2");
 
     let res;
-
-    if (idAnteces && idSuces) {
-      // Caso: Ambos parámetros presentes
-      res = await conn.query(
-        "SELECT * FROM regularizada WHERE idAnteces = ? AND idSuces = ?",
-        [idAnteces, idSuces]
-      );
-    } else if (idAnteces) {
-      // Caso: Solo idAnteces presente
-      res = await conn.query("SELECT * FROM regularizada WHERE idAnteces = ?", [
-        idAnteces,
-      ]);
-    } else if (idSuces) {
-      // Caso: Solo idSuces presente
-      res = await conn.query("SELECT * FROM regularizada WHERE idSuces = ?", [
-        idSuces,
-      ]);
-    } else {
+    if (!idAnteces && !idSuces) {
       // Caso: Sin parámetros, obtener todas las filas
       res = await conn.query("SELECT * FROM regularizada");
-    }
+      if (res.length === 0) {
+        return NextResponse.json(
+          {
+            message: "No se encontraron resultados",
+          },
+          {
+            status: 404,
+          }
+        );
+      }
+      return NextResponse.json(res);
+    } else {
+      if (idAnteces && idSuces) {
+        // Caso: Ambos parámetros presentes
+        res = await conn.query(
+          "SELECT * FROM regularizada WHERE idAnteces = ? AND idSuces = ?",
+          [idAnteces, idSuces]
+        );
+      } else if (idAnteces) {
+        // Caso: Solo idAnteces presente
+        res = await conn.query(
+          "SELECT * FROM regularizada WHERE idAnteces = ?",
+          [idAnteces]
+        );
+      } else if (idSuces) {
+        // Caso: Solo idSuces presente
+        res = await conn.query("SELECT * FROM regularizada WHERE idSuces = ?", [
+          idSuces,
+        ]);
+      }
 
-    if (res.length === 0) {
-      return NextResponse.json(
-        {
-          message: "Relación no encontrada",
-        },
-        {
-          status: 404,
-        }
-      );
-    }
+      if (res.length === 0) {
+        return NextResponse.json(
+          {
+            message: "Relación no encontrada",
+          },
+          {
+            status: 404,
+          }
+        );
+      }
 
-    return NextResponse.json(res);
+      return NextResponse.json(res);
+    }
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
@@ -65,7 +78,23 @@ export async function POST(request) {
 
 export async function DELETE(request) {
   try {
-    const res = await conn.query("DELETE FROM regularizada");
+    const { searchParams } = new URL(request.url);
+    const idAnteces = searchParams.get("id1");
+    const idSuces = searchParams.get("id2");
+    const res = await conn.query(
+      "DELETE FROM regularizada WHERE idAnteces = ? AND idSuces = ?",
+      [idAnteces, idSuces]
+    );
+    if (res.affectedRows === 0) {
+      return NextResponse.json(
+        {
+          message: "Relacion no encontrada",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
     return new Response(null, {
       status: 204,
     });
@@ -106,19 +135,19 @@ export async function PUT(request, { params }) {
         }
       );
     }
-    let updatedReg
-    if (data.idAnteces){
+    let updatedReg;
+    if (data.idAnteces) {
       updatedReg = await conn.query(
         "SELECT * FROM regularizada WHERE idAnteces = ? AND idSuces = ?",
         [data.idAnteces, idSuces]
       );
-    } else if (data.idSuces){
+    } else if (data.idSuces) {
       updatedReg = await conn.query(
         "SELECT * FROM regularizada WHERE idAnteces = ? AND idSuces = ?",
         [idAnteces, data.idSuces]
       );
     }
-    
+
     return NextResponse.json(updatedReg[0]);
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
