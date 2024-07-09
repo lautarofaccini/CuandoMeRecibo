@@ -1,9 +1,9 @@
 import { Checkbox } from "@nextui-org/react";
 import { useState } from "react";
 
-function CheckboxRegulares({ materia }) {
+function CheckboxRegulares({ defaultSelected, materia }) {
 
-    const [isSelected, setIsSelected] = useState(false)
+    const [isSelected, setIsSelected] = useState(defaultSelected)
 
   return (
     <div>
