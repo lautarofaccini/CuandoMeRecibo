@@ -17,10 +17,14 @@ export async function GET(request) {
       );
     } else if (idAnteces) {
       // Caso: Solo idAnteces presente
-      res = await conn.query("SELECT * FROM regularizada WHERE idAnteces = ?", [idAnteces]);
+      res = await conn.query("SELECT * FROM regularizada WHERE idAnteces = ?", [
+        idAnteces,
+      ]);
     } else if (idSuces) {
       // Caso: Solo idSuces presente
-      res = await conn.query("SELECT * FROM regularizada WHERE idSuces = ?", [idSuces]);
+      res = await conn.query("SELECT * FROM regularizada WHERE idSuces = ?", [
+        idSuces,
+      ]);
     } else {
       // Caso: Sin parámetros, obtener todas las filas
       res = await conn.query("SELECT * FROM regularizada");
@@ -70,3 +74,53 @@ export async function DELETE(request) {
   }
 }
 //TODO: Hacer un put que reciba dos ids y devuelva la fila actualizada
+export async function PUT(request, { params }) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const idAnteces = searchParams.get("id1");
+    const idSuces = searchParams.get("id2");
+    // Validación de entrada
+    if (isNaN(idAnteces) || isNaN(idSuces)) {
+      return NextResponse.json(
+        {
+          message: "Invalid idAnteces or idSuces",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const data = await request.json();
+    const res = await conn.query(
+      "UPDATE regularizada SET ? WHERE idAnteces = ? AND idSuces = ?",
+      [data, idAnteces, idSuces]
+    );
+    if (res.affectedRows === 0) {
+      return NextResponse.json(
+        {
+          message: "Relacion no encontrada",
+        },
+        {
+          status: 404,
+        }
+      );
+    }
+    let updatedReg
+    if (data.idAnteces){
+      updatedReg = await conn.query(
+        "SELECT * FROM regularizada WHERE idAnteces = ? AND idSuces = ?",
+        [data.idAnteces, idSuces]
+      );
+    } else if (data.idSuces){
+      updatedReg = await conn.query(
+        "SELECT * FROM regularizada WHERE idAnteces = ? AND idSuces = ?",
+        [idAnteces, data.idSuces]
+      );
+    }
+    
+    return NextResponse.json(updatedReg[0]);
+  } catch (error) {
+    return NextResponse.json({ message: error.message }, { status: 500 });
+  }
+}

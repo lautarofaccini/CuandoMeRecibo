@@ -4,11 +4,10 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 
 
-function Buttons({ materiaId }) {
+function Buttons({ materiaId, onShowForm }) {
   const router = useRouter();
- function showCorrelativas(){
-  console.log("TODO: Hacer que este boton despliegue el formulario")
- }
+
+ 
   return (
     <div className="flex gap-x-2 justify-end mt-2">
       <Button
@@ -36,7 +35,7 @@ function Buttons({ materiaId }) {
       </Button>
       <Button
       className="text-white bg-gray-500 hover:bg-gray-700 py-2 px-3 rounded"
-      onClick={()=>{showCorrelativas()}}
+      onClick={onShowForm}
       >
         Correlatividad
       </Button>

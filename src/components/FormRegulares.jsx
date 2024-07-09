@@ -3,13 +3,15 @@
 import { Button } from "@nextui-org/react";
 import axios from "axios";
 import CheckboxRegulares from "./CheckboxRegulares";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
-async function loadMaterias() {
+async function fetchMaterias() {
   const { data } = await axios.get("http://localhost:3000/api/materias");
   //TODO: Solo se deben cargar materias de años menores al de la materia en cuestion
   return data;
 }
-async function loadRegularizada(idPadre) {
+async function fetchRegularizada(idPadre) {
   try {
     const { data } = await axios.get(
       `http://localhost:3000/api/regularizada?id2=${idPadre}`
@@ -20,21 +22,49 @@ async function loadRegularizada(idPadre) {
   }
 }
 
-function updateRegular(nuevoId) {
-  console.log("actualizado: ", nuevoId);
-}
+function FormRegulares({ idPadre }) {
+  const [materias, setMaterias] = useState([]);
+  const [regularizada, setRegularizada] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-function createRegular(nuevoId) {
-  console.log("creado: ", nuevoId);
-}
+  useEffect(() => {
+    async function loadData() {
+      const loadedMaterias = await fetchMaterias();
+      const loadedRegularizada = await fetchRegularizada(idPadre);
+      setMaterias(loadedMaterias);
+      setRegularizada(loadedRegularizada);
+      setLoading(false);
+    }
 
-function deleteRegular(nuevoId) {
-  console.log("borrado: ", nuevoId);
-}
+    loadData();
+  }, [idPadre]);
 
-async function FormRegulares({ idPadre }) {
-  const materias = await loadMaterias();
-  const regularizada = await loadRegularizada(idPadre);
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  async function updateRegular(nuevoId, viejoId) {
+    console.log("actualizado: este ", viejoId, " por este ", nuevoId);
+    const data = {
+      idAnteces: nuevoId,
+    };
+    console.log(data);
+    const res = await axios.put(
+      "/api/regularizada?id1=" + viejoId + "&id2=" + idPadre,
+      data
+    );
+    console.log(res.data);
+    return res.data;
+  }
+
+  function createRegular(nuevoId) {
+    console.log("creado: ", nuevoId);
+  }
+
+  function deleteRegular(nuevoId) {
+    console.log("borrado: ", nuevoId);
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -51,6 +81,16 @@ async function FormRegulares({ idPadre }) {
       const regAux = regularizada.filter(
         (elemento) => !data.includes(elemento)
       );
+      const Iguales = regularizada.filter(
+        (elemento) => data.includes(elemento)
+      );
+      let regSal = [];
+      for (let i = 0; i < Iguales.length; i++) {
+        regSal.push({
+          idAnteces: Iguales[i],
+          idSuces: idPadre
+        })
+      }
       if (dataAux.length !== regAux.length) {
         if (dataAux.length > regAux.length) {
           let dLenght = dataAux.length;
@@ -66,13 +106,17 @@ async function FormRegulares({ idPadre }) {
           }
         }
       }
-      if (dataAux.length !== 0 || regAux.length !== 0){
+      if (dataAux.length !== 0 || regAux.length !== 0) {
         // Misma longitud
         for (let i = 0; i < regAux.length; i++) {
-          updateRegular(dataAux[0]);
+          regSal.push(updateRegular(dataAux[0], regAux[i]));
           dataAux.shift();
         }
       }
+      // Esperar a que todas las promesas se resuelvan
+      regSal = await Promise.all(regSal);
+      setRegularizada((regSal.map((reg) => reg.idAnteces)).sort((a, b) => a - b));
+      router.refresh();
       //TODO: Testear con mas convinaciones
     }
   };
