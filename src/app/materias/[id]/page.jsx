@@ -48,7 +48,8 @@ function MateriaPage({ params }) {
       </div>
       {showForm && (
         <div className="p-6 bg-slate-500 rounded">
-          <FormRegulares idPadre={materia.id} />
+          <FormRegulares condicion="regularizada" idPadre={materia.id} />
+          <FormRegulares condicion="aprobada" idPadre={materia.id} />
         </div>
       )}
     </section>

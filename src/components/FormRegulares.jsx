@@ -22,7 +22,7 @@ async function fetchRegularizada(idPadre) {
   }
 }
 
-function FormRegulares({ idPadre }) {
+function FormRegulares({ condicion,  idPadre }) {
   const [materias, setMaterias] = useState([]);
   const [regularizada, setRegularizada] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -43,6 +43,7 @@ function FormRegulares({ idPadre }) {
   if (loading) {
     return <div>Loading...</div>;
   }
+  console.log(condicion)
 
   async function updateRegular(nuevoId, viejoId) {
     const data = {
@@ -128,6 +129,7 @@ function FormRegulares({ idPadre }) {
       // Esperar a que todas las promesas se resuelvan
       regSal = await Promise.all(regSal);
       setRegularizada(regSal.map((reg) => reg.idAnteces).sort((a, b) => a - b));
+      alert("Correlatividades actualizadas")
       //TODO: Testear con mas convinaciones
     }
   };
