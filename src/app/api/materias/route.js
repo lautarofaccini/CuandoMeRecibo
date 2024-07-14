@@ -1,10 +1,16 @@
 import { NextResponse } from "next/server";
 import { conn } from "@/libs/mysql";
 
-export async function GET() {
+export async function GET(request) {
   try {
-    const res = await conn.query("SELECT * FROM materias");
-
+    const { searchParams } = new URL(request.url);
+    const nivel = searchParams.get("nivel");
+    let res;
+    if (!nivel) {
+      res = await conn.query("SELECT * FROM materias");
+    } else {
+      res = await conn.query("SELECT * FROM materias WHERE nivel < " + nivel);
+    }
     return NextResponse.json(res);
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
@@ -19,15 +25,15 @@ export async function POST(request) {
       asignatura,
       nivel,
       dictado,
-      plan
+      plan,
     });
-    
+
     return NextResponse.json({
-        id,
-        asignatura,
-        nivel,
-        dictado,
-        plan
+      id,
+      asignatura,
+      nivel,
+      dictado,
+      plan,
     });
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });

@@ -94,7 +94,7 @@ async function ActualizarCondiciones(nombreCondicion, condicion, data, id) {
     return salida.map((reg) => reg.idAnteces).sort((a, b) => a - b);
     //TODO: Testear con mas convinaciones
   } else {
-    return condicion
+    return condicion;
   }
 }
 
@@ -138,7 +138,9 @@ function MateriaPage({ params }) {
     const dataReg = formData
       .getAll("regularizada")
       .map((item) => parseInt(item, 10));
-    const dataAp = formData.getAll("aprobada").map((item) => parseInt(item, 10));
+    const dataAp = formData
+      .getAll("aprobada")
+      .map((item) => parseInt(item, 10));
 
     try {
       const [regResult, apResult] = await Promise.all([
@@ -157,38 +159,51 @@ function MateriaPage({ params }) {
   };
 
   return (
-    <section className="flex justify-center items-center gap-x-4">
-      <div className="p-6 bg-white rounded">
-        <p>Numero de materia: {materia.id}</p>
-        <p>Nombre de materia: {materia.asignatura}</p>
-        <p>Año: {materia.nivel}</p>
-        {materia.dictado ? <p>Dictado: {materia.dictado}</p> : null}
-        {materia.plan ? <p>Plan: {materia.plan}</p> : null}
-        <Buttons materiaId={materia.id} onShowForm={handleShowForm} />
-      </div>
-      {showForm && (
-        <div className="p-6 bg-slate-500 rounded">
-          <form onSubmit={handleSubmit}>
-            <div className="flex justify-center items-center gap-x-4">
-              <FormCondicion
-                nombreCondicion="regularizada"
-                idPadre={materia.id}
-                listaCondicion={regularizada}
-              />
-              <FormCondicion
-                nombreCondicion="aprobada"
-                idPadre={materia.id}
-                listaCondicion={aprobada}
-              />
-            </div>
-            <div className="flex justify-end">
-              <Button type="submit" className="mt-3">
-                Guardar
-              </Button>
-            </div>
-          </form>
+    <section>
+      <div className="flex justify-center items-center gap-x-4">
+        <div className="p-6 bg-white rounded">
+          <p>Numero de materia: {materia.id}</p>
+          <p>Nombre de materia: {materia.asignatura}</p>
+          <p>Año: {materia.nivel}</p>
+          {materia.dictado ? <p>Dictado: {materia.dictado}</p> : null}
+          {materia.plan ? <p>Plan: {materia.plan}</p> : null}
+          <Buttons materia={materia} onShowForm={handleShowForm} />
         </div>
-      )}
+        {showForm && (
+          <div className="p-6 bg-slate-500 rounded">
+            <form onSubmit={handleSubmit}>
+              <div className="flex justify-center items-center gap-x-4">
+                <FormCondicion
+                  nombreCondicion="regularizada"
+                  materia={materia}
+                  listaCondicion={regularizada}
+                />
+                <FormCondicion
+                  nombreCondicion="aprobada"
+                  materia={materia}
+                  listaCondicion={aprobada}
+                />
+              </div>
+              <div className="flex justify-end">
+                <Button type="submit" className="mt-3">
+                  Guardar
+                </Button>
+              </div>
+            </form>
+          </div>
+        )}
+      </div>
+      <div className="flex justify-end">
+        <Button
+          className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-3 rounded"
+          onClick={() => {
+            router.push("/materias/" + (materia.id + 1));
+            //TODO: Comprobar que la siguiente exista
+          }}
+        >
+          Siguiente
+        </Button>
+      </div>
     </section>
   );
 }

@@ -12,7 +12,7 @@ function CheckboxCondicion({ defaultSelected, materia, nombreCondicion }) {
         name={nombreCondicion}
         value={materia.id}
       >
-        <p className="text-black">{materia.asignatura}</p>
+        <p className="text-black">{materia.id + ". " + materia.asignatura}</p>
       </Checkbox>
     </div>
   );

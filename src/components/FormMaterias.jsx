@@ -12,7 +12,8 @@ function FormMaterias() {
     dictado: "",
     plan: 2023,
   });
-
+//TODO: Mejorar la carga secuencial, permitiendo cargar el siguiente sin necesidad de volver al inicio y presionar nuevo
+//TODO: Cuando carga el siguiente, que recuerde lo anterior para carga mas eficiente
   const form = useRef(null);
   const router = useRouter();
   const params = useParams();
