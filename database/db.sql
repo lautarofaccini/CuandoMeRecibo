@@ -15,7 +15,15 @@ CREATE TABLE materias(
     plan SMALLINT UNSIGNED
 );
 
-CREATE TABLE correlativa(
+CREATE TABLE aprobada(
+    idAnteces INT UNSIGNED,
+    idSuces INT UNSIGNED,
+    PRIMARY KEY (idAnteces, idSuces),
+    FOREIGN KEY (idAnteces) REFERENCES materias(id),
+    FOREIGN KEY (idSuces) REFERENCES materias(id)
+);
+
+CREATE TABLE regularizada(
     idAnteces INT UNSIGNED,
     idSuces INT UNSIGNED,
     PRIMARY KEY (idAnteces, idSuces),

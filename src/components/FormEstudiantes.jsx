@@ -74,7 +74,7 @@ function FormEstudiantes() {
         placeholder="XXXXXXXX"
         onChange={handleChange}
         value={estudiante.dni}
-        className="shadow text-black appearance-none border rounded w-full py-2 px-3 mb-1"
+        className="shadow bg-white text-black appearance-none border rounded w-full py-2 px-3 mb-1"
         autoFocus
       />
 
@@ -90,7 +90,7 @@ function FormEstudiantes() {
         placeholder="Nombre"
         onChange={handleChange}
         value={estudiante.nombre}
-        className="shadow text-black appearance-none border rounded w-full py-2 px-3 mb-1"
+        className="shadow bg-white text-black appearance-none border rounded w-full py-2 px-3 mb-1"
       />
 
       <label
@@ -105,7 +105,7 @@ function FormEstudiantes() {
         placeholder="Apellido"
         onChange={handleChange}
         value={estudiante.apellido}
-        className="shadow text-black appearance-none border rounded w-full py-2 px-3 mb-1"
+        className="shadow bg-white text-black appearance-none border rounded w-full py-2 px-3 mb-1"
       />
 
       <label
@@ -119,7 +119,7 @@ function FormEstudiantes() {
         type="date"
         onChange={handleChange}
         value={estudiante.fechaNac}
-        className="shadow text-black appearance-none border rounded w-full py-2 px-3"
+        className="shadow bg-white text-black appearance-none border rounded w-full py-2 px-3"
       />
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">
         Guardar

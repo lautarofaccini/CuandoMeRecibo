@@ -1,13 +1,16 @@
 "use client";
+import { Button } from "@nextui-org/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
-function Buttons({ materiaId }) {
+
+function Buttons({ materiaId, onShowForm }) {
   const router = useRouter();
 
+ 
   return (
     <div className="flex gap-x-2 justify-end mt-2">
-      <button
+      <Button
         className="text-white bg-red-500 hover:bg-red-700 py-2 px-3 rounded"
         onClick={async () => {
           if (confirm("¿Seguro que quieres borrar esta materia?")) {
@@ -20,16 +23,23 @@ function Buttons({ materiaId }) {
         }}
       >
         Delete
-      </button>
-      <button
-        className="text-white bg-gray-500 hover:bg-gray-700 py-2 px-3 rounded"
+      </Button>
+      <Button
+        className="text-white bg-slate-500 hover:bg-slate-700 py-2 px-3 rounded"
         onClick={() => {
           router.push("/materias/edit/" + materiaId);
           router.refresh();
         }}
       >
         Edit
-      </button>
+      </Button>
+      <Button
+      className="text-white bg-gray-500 hover:bg-gray-700 py-2 px-3 rounded"
+      onClick={onShowForm}
+      >
+        Correlatividad
+      </Button>
+
     </div>
   );
 }

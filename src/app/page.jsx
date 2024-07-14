@@ -1,6 +1,12 @@
+import {Button} from '@nextui-org/button'; 
+import { Checkbox} from '@nextui-org/checkbox'
+
 function HomePage() {
   return (
-    <div>Bienvenido</div>
+    <div>
+      <Button>Bienvenido</Button>
+      <Checkbox>Holaaaaaaa</Checkbox>
+    </div>
   )
 }
 

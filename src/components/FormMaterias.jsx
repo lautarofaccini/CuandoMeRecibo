@@ -51,7 +51,6 @@ function FormMaterias() {
     if (data.plan) {
       data.plan = Number(data.plan);
     }
-    console.log(data);
     if (!params.id) {
       const res = await axios.post("/api/materias", data);
     } else {
@@ -84,7 +83,7 @@ function FormMaterias() {
         min="0"
         onChange={handleChange}
         value={materia.id}
-        className="shadow text-black appearance-none border rounded w-full py-2 px-3 mb-1"
+        className="shadow bg-white text-black appearance-none border rounded w-full py-2 px-3 mb-1"
         autoFocus
       />
 
@@ -100,7 +99,7 @@ function FormMaterias() {
         placeholder="Nombre"
         onChange={handleChange}
         value={materia.asignatura}
-        className="shadow text-black appearance-none border rounded w-full py-2 px-3 mb-1"
+        className="shadow bg-white text-black appearance-none border rounded w-full py-2 px-3 mb-1"
       />
 
       <label
@@ -115,7 +114,7 @@ function FormMaterias() {
         placeholder="Nivel"
         onChange={handleChange}
         value={materia.nivel}
-        className="shadow text-black appearance-none border rounded w-full py-2 px-3 mb-1"
+        className="shadow bg-white text-black appearance-none border rounded w-full py-2 px-3 mb-1"
       />
 
       <label
@@ -130,7 +129,7 @@ function FormMaterias() {
         placeholder="Anual / 1c / 2c / 1/2c"
         onChange={handleChange}
         value={materia.dictado}
-        className="shadow text-black appearance-none border rounded w-full py-2 px-3"
+        className="shadow bg-white text-black appearance-none border rounded w-full py-2 px-3"
       />
 
       <label
@@ -145,7 +144,7 @@ function FormMaterias() {
         placeholder="2023"
         onChange={handleChange}
         value={materia.plan}
-        className="shadow text-black appearance-none border rounded w-full py-2 px-3"
+        className="shadow bg-white text-black appearance-none border rounded w-full py-2 px-3"
       />
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">
         Guardar
