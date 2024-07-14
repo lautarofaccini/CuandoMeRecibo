@@ -1,4 +1,5 @@
 "use client";
+
 import axios from "axios";
 import Buttons from "./Buttons";
 import { Button } from "@nextui-org/react";
@@ -12,6 +13,7 @@ async function fetchMateria(materiaId) {
   );
   return data;
 }
+
 async function fetchCondicion(nombreCondicion, idPadre) {
   try {
     const { data } = await axios.get(
@@ -52,6 +54,7 @@ async function ActualizarCondiciones(nombreCondicion, condicion, data, id) {
       console.log("Error al eliminar materia: ", res);
     }
   }
+
   if (JSON.stringify(data) !== JSON.stringify(condicion)) {
     //! Si en algun momento se desordenan las listas, esta comparacion podria dar un falso positivo
     const dataAux = data.filter((elemento) => !condicion.includes(elemento));
@@ -131,35 +134,24 @@ function MateriaPage({ params }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const parentForm = e.target;
-    const childForms = parentForm.querySelectorAll("form");
+    const formData = new FormData(e.target);
+    const dataReg = formData
+      .getAll("regularizada")
+      .map((item) => parseInt(item, 10));
+    const dataAp = formData.getAll("aprobada").map((item) => parseInt(item, 10));
 
-    const allData = Array.from(childForms).map((form) => {
-      const formData = new FormData(form);
-      const data = formData
-        .getAll("checklist")
-        .map((item) => parseInt(item, 10));
-      return {
-        data,
-      };
-    });
-    const dataReg = allData[0].data;
-    const dataAp = allData[1].data;
     try {
-      // Ejecutar las actualizaciones de condiciones y esperar los resultados
       const [regResult, apResult] = await Promise.all([
         ActualizarCondiciones("regularizada", regularizada, dataReg, params.id),
         ActualizarCondiciones("aprobada", aprobada, dataAp, params.id),
       ]);
-  
       // Actualizar el estado con los resultados
       setRegularizada(regResult);
       setAprobada(apResult);
-  
+
       alert("Correlatividades actualizadas");
     } catch (error) {
       console.error("Error al actualizar correlatividades:", error);
-      // Manejar errores aquí si es necesario
       router.push("/materias");
     }
   };
@@ -190,7 +182,7 @@ function MateriaPage({ params }) {
               />
             </div>
             <div className="flex justify-end">
-              <Button type="submit" className=" mt-3">
+              <Button type="submit" className="mt-3">
                 Guardar
               </Button>
             </div>

@@ -38,21 +38,24 @@ function FormCondicion({ nombreCondicion, idPadre, listaCondicion }) {
   }
 
   return (
-    <form name={`form-${idPadre}-${nombreCondicion}`}>
-      <h1 className="font-bold text-2xl mb-2">
+    <div>
+      <h1 className="font-bold text-2xl mb-4">
         {nombreCondicion === "regularizada" ? "Regular" : "Aprobado"}
       </h1>
       <ul>
-        {materias.map((materia) => (
-          <li key={materia.id}>
-            <CheckboxCondicion
-              defaultSelected={condicion.includes(materia.id)}
-              materia={materia}
-            />
-          </li>
-        ))}
+        {materias
+          .filter((mat) => mat.id !== idPadre)
+          .map((mat) => (
+            <li key={mat.id} className="flex items-center">
+              <CheckboxCondicion
+                defaultSelected={condicion.includes(mat.id)}
+                materia={mat}
+                nombreCondicion={nombreCondicion}
+              />
+            </li>
+          ))}
       </ul>
-    </form>
+    </div>
   );
 }
 
