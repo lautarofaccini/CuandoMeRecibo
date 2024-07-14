@@ -1,7 +1,7 @@
 import { Checkbox } from "@nextui-org/react";
 import { useState } from "react";
 
-function CheckboxRegulares({ defaultSelected, materia }) {
+function CheckboxCondicion({ defaultSelected, materia }) {
 
     const [isSelected, setIsSelected] = useState(defaultSelected)
 
@@ -14,4 +14,4 @@ function CheckboxRegulares({ defaultSelected, materia }) {
   );
 }
 
-export default CheckboxRegulares;
+export default CheckboxCondicion;

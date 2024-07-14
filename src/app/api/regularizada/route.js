@@ -102,7 +102,7 @@ export async function DELETE(request) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
-//TODO: Hacer un put que reciba dos ids y devuelva la fila actualizada
+
 export async function PUT(request, { params }) {
   try {
     const { searchParams } = new URL(request.url);
