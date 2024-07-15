@@ -11,7 +11,7 @@ import NotFound from "@/app/not-found";
 async function fetchCondicion(nombreCondicion, idPadre) {
   try {
     const { data } = await axios.get(
-      `http://localhost:3000/api/${nombreCondicion}?id2=${idPadre}`
+      `http://localhost:3000/api/condicion?cond=${nombreCondicion}&id2=${idPadre}`
     );
     return data.map((reg) => reg.idAnteces);
   } catch (error) {
@@ -26,7 +26,7 @@ async function ActualizarCondiciones(nombreCondicion, condicion, data, id) {
       idAnteces: nuevoId,
     };
     const res = await axios.put(
-      "/api/" + nombreCondicion + "?id1=" + viejoId + "&id2=" + id,
+      "/api/condicion?cond=" + nombreCondicion + "&id1=" + viejoId + "&id2=" + id,
       data
     );
     return res.data;
@@ -37,13 +37,13 @@ async function ActualizarCondiciones(nombreCondicion, condicion, data, id) {
       idAnteces: nuevoId,
       idSuces: id,
     };
-    const res = await axios.post("/api/" + nombreCondicion, data);
+    const res = await axios.post("/api/condicion?cond=" + nombreCondicion, data);
     return res.data;
   }
 
   async function deleteRegular(idElim) {
     const res = await axios.delete(
-      "/api/" + nombreCondicion + "?id1=" + idElim + "&id2=" + id
+      "/api/condicion?cond=" + nombreCondicion + "&id1=" + idElim + "&id2=" + id
     );
     if (res.status !== 204) {
       console.log("Error al eliminar materia: ", res);
@@ -118,11 +118,12 @@ function MateriaPage({ params }) {
       } catch (error) {
         if (error.message === "Materia not found") {
           setNotFound(true);
+        } else {
+          console.log(error)
         }
       }
       setLoading(false);
     }
-
     loadData();
   }, [params]);
 
@@ -178,7 +179,6 @@ function MateriaPage({ params }) {
       router.push("/materias");
     }
   };
-
   return (
     <section>
       <div className="flex justify-center items-center gap-x-4">
