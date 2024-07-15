@@ -6,13 +6,7 @@ import { Button } from "@nextui-org/react";
 import FormCondicion from "@/components/FormCondicion";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
-async function fetchMateria(materiaId) {
-  const { data } = await axios.get(
-    `http://localhost:3000/api/materias/${materiaId}`
-  );
-  return data;
-}
+import NotFound from "@/app/not-found";
 
 async function fetchCondicion(nombreCondicion, idPadre) {
   try {
@@ -21,7 +15,8 @@ async function fetchCondicion(nombreCondicion, idPadre) {
     );
     return data.map((reg) => reg.idAnteces);
   } catch (error) {
-    return [];
+      console.error("Error fetching condicion:", error);
+      throw error;
   }
 }
 
@@ -100,24 +95,31 @@ async function ActualizarCondiciones(nombreCondicion, condicion, data, id) {
 
 function MateriaPage({ params }) {
   const [materia, setMateria] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
   const [regularizada, setRegularizada] = useState([]);
   const [aprobada, setAprobada] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
   const router = useRouter();
 
   useEffect(() => {
     async function loadData() {
-      const loadedMateria = await fetchMateria(params.id);
-      const loadedRegularizada = await fetchCondicion(
-        "regularizada",
-        params.id
-      );
-      const loadedAprobada = await fetchCondicion("aprobada", params.id);
-      setMateria(loadedMateria);
-      setRegularizada(loadedRegularizada);
-      setAprobada(loadedAprobada);
+      try {
+        const loadedMateria = await fetchMateria();
+        setMateria(loadedMateria);
+        const loadedRegularizada = await fetchCondicion(
+          "regularizada",
+          params.id
+        );
+        const loadedAprobada = await fetchCondicion("aprobada", params.id);
+        setRegularizada(loadedRegularizada);
+        setAprobada(loadedAprobada);
+      } catch (error) {
+        if (error.message === "Materia not found") {
+          setNotFound(true);
+        }
+      }
       setLoading(false);
     }
 
@@ -126,6 +128,25 @@ function MateriaPage({ params }) {
 
   if (loading) {
     return <div>Loading...</div>;
+  }
+  if (notFound) {
+    return <NotFound />;
+  }
+
+  async function fetchMateria() {
+    try {
+      const { data } = await axios.get(
+        `http://localhost:3000/api/materias/${params.id}`
+      );
+      return data;
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        throw new Error("Materia not found");
+      } else {
+        console.error("Error fetching materia:", error);
+        throw error;
+      }
+    }
   }
 
   const handleShowForm = () => {
@@ -193,7 +214,17 @@ function MateriaPage({ params }) {
           </div>
         )}
       </div>
-      <div className="flex justify-end">
+      <div className="flex justify-end gap-2">
+        {materia.id !== 1 && (
+          <Button
+            className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-3 rounded"
+            onClick={() => {
+              router.push("/materias/" + (materia.id - 1));
+            }}
+          >
+            Anterior
+          </Button>
+        )}
         <Button
           className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-3 rounded"
           onClick={() => {

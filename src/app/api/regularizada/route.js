@@ -29,6 +29,16 @@ export async function GET(request) {
           "SELECT * FROM regularizada WHERE idAnteces = ? AND idSuces = ?",
           [idAnteces, idSuces]
         );
+        if (res.length === 0) {
+          return NextResponse.json(
+            {
+              message: "Relación no encontrada",
+            },
+            {
+              status: 404,
+            }
+          );
+        }
       } else if (idAnteces) {
         // Caso: Solo idAnteces presente
         res = await conn.query(
@@ -41,18 +51,6 @@ export async function GET(request) {
           idSuces,
         ]);
       }
-
-      if (res.length === 0) {
-        return NextResponse.json(
-          {
-            message: "Relación no encontrada",
-          },
-          {
-            status: 404,
-          }
-        );
-      }
-
       return NextResponse.json(res);
     }
   } catch (error) {
