@@ -3,7 +3,7 @@
 import axios from "axios";
 import Buttons from "./Buttons";
 import { Button } from "@nextui-org/react";
-import FormCondicion from "@/components/FormCondicion";
+import FormCondicion from "./FormCondicion";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import NotFound from "@/app/not-found";
