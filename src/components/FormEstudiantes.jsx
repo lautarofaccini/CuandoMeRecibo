@@ -10,6 +10,8 @@ function FormEstudiantes() {
     nombre: "",
     apellido: "",
     fechaNac: "",
+    email: "",
+    password: "",
   });
 
   const form = useRef(null);
@@ -31,6 +33,8 @@ function FormEstudiantes() {
           nombre: res.data.nombre,
           apellido: res.data.apellido,
           fechaNac: res.data.fechaNac,
+          email: res.data.email,
+          password: res.data.password,
         });
       });
     }
@@ -119,6 +123,34 @@ function FormEstudiantes() {
         type="date"
         onChange={handleChange}
         value={estudiante.fechaNac}
+        className="shadow bg-white text-black appearance-none border rounded w-full py-2 px-3 mb-1"
+      />
+      <label
+        htmlFor="email"
+        className="block text-gray-700 text-sm font-bold mb-2"
+      >
+        Correo
+      </label>
+      <input
+        name="email"
+        type="email"
+        placeholder="ejemplo@email.com"
+        onChange={handleChange}
+        value={estudiante.email}
+        className="shadow bg-white text-black appearance-none border rounded w-full py-2 px-3 mb-1"
+      />
+      <label
+        htmlFor="password"
+        className="block text-gray-700 text-sm font-bold mb-2"
+      >
+        Contraseña
+      </label>
+      <input
+        name="password"
+        type="password"
+        placeholder="********"
+        onChange={handleChange}
+        value={estudiante.password}
         className="shadow bg-white text-black appearance-none border rounded w-full py-2 px-3"
       />
       <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">

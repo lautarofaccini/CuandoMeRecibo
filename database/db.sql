@@ -1,10 +1,12 @@
 CREATE TABLE estudiantes(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    dni DECIMAL(8),
-    --TODO: CAMBIAR DOMINIO A INT UNSIGNED
+    dni INT UNSIGNED UNIQUE NOT NULL,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
-    fechaNac DATE NOT NULL
+    fechaNac DATE NOT NULL,
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(100)
+    --TODO: Agregar not null a email y password
 );
 
 CREATE TABLE materias(
