@@ -17,11 +17,13 @@ export async function POST(request) {
   try {
     const { username, email, password } = await request.json();
     //Verificar si el usuario ya exista
-    const userFound = await conn.query(
+    const femail = await conn.query(
       "SELECT * FROM usuarios WHERE email = ?",
       email
     );
-    if (userFound[0]) {
+    const userFound = femail[0]
+    if (userFound) {
+
       return NextResponse.json(
         { message: "El usuario ya existe" },
         { status: 400 }
@@ -29,11 +31,12 @@ export async function POST(request) {
     }
 
     //Verificar si el nombre de usuario ya exista
-    const usernameFound = await conn.query(
+    const fusern = await conn.query(
       "SELECT * FROM usuarios WHERE username = ?",
       username
     );
-    if (usernameFound[0]) {
+    const usernameFound = fusern[0]
+    if (usernameFound) {
       return NextResponse.json(
         { message: "El nombre de usuario ya esta en uso" },
         { status: 400 }
