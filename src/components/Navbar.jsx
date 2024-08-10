@@ -5,6 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
 async function Navbar() {
   const session = await getServerSession(authOptions);
+  //TODO: Crear una alerta que permita cerrar sesion
   return (
     <nav className="bg-zinc-950 text-white py-3 mb-2">
       <div className="container mx-auto flex items-center justify-between">
@@ -34,7 +35,6 @@ async function Navbar() {
                 </Link>
               </li>
               <li>
-                //TODO: Crear una alerta que permita cerrar sesion
                 <Link href="/api/auth/signout" className=" hover:text-sky-400">
                   Cerrar Sesión
                 </Link>
