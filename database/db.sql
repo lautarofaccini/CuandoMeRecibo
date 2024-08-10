@@ -1,12 +1,21 @@
-CREATE TABLE estudiantes(
+CREATE TABLE usuarios(
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    dni INT UNSIGNED UNIQUE NOT NULL,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    --TODO: Agregar not null a email y password
+    createdAt TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+    updatedAt TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+);
+
+CREATE TABLE estudiantes(
+    dni INT UNSIGNED PRIMARY KEY,
+    id INT UNSIGNED,
+    --TODO: Agregar not null a id
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
     fechaNac DATE NOT NULL,
-    email VARCHAR(100) UNIQUE,
-    password VARCHAR(100)
-    --TODO: Agregar not null a email y password
+    FOREIGN KEY id REFERENCES usuarios,
 );
 
 CREATE TABLE materias(

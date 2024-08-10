@@ -9,7 +9,6 @@ function CardEstudiante({ estudiante }) {
       </h1>
       <h2 className="text-lg">DNI: {estudiante.dni}</h2>
       <p>Fecha de nacimiento: {estudiante.fechaNac}</p>
-      <p>Correo: {estudiante.email}</p>
     </Link>
   );
 }

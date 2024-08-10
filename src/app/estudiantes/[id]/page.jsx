@@ -17,8 +17,6 @@ async function EstudiantePage({ params }) {
         <p>Apellido: {estudiante.apellido}</p>
         <p>DNI: {estudiante.dni}</p>
         <p>Fecha de nacimiento: {estudiante.fechaNac}</p>
-        <p>Correo: {estudiante.email}</p>
-        <p>Contraseña: {estudiante.password}</p>
         <Buttons estudianteId={estudiante.id}/>
       </div>
     </section>
