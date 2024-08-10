@@ -1,12 +1,8 @@
-import {Button} from '@nextui-org/button'; 
-import { Checkbox} from '@nextui-org/checkbox'
-
 function HomePage() {
   return (
-    <div>
-      <Button>Bienvenido</Button>
-      <Checkbox>Holaaaaaaa</Checkbox>
-    </div>
+    <section className="h-[calc(100hv-7rem)] flex justify-center items-center">
+    <h1 className="text-white text-5xl">Pagina Principal</h1>
+  </section>
   )
 }
 

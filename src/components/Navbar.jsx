@@ -1,12 +1,10 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import ButtonNuevo from "./ButtonNuevo";
+import Navoptions from "@/components/Navoptions";
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 
-function Navbar() {
-  const pathname = usePathname();
-
+async function Navbar() {
+  const session = await getServerSession(authOptions);
   return (
     <nav className="bg-zinc-950 text-white py-3 mb-2">
       <div className="container mx-auto flex items-center justify-between">
@@ -14,29 +12,35 @@ function Navbar() {
           <Link href="/">Cuando Me Recibo?</Link>
         </h3>
         <ul className="flex gap-x-4 text-2xl font-bold text-sky-500">
-          {!(pathname === "/estudiantes") &&
-          !pathname.startsWith("/materias") ? (
-            <li>
-              <Link href="/estudiantes" className=" hover:text-sky-400">
-                Estudiantes
-              </Link>
-            </li>
-          ) : null}
-          {!(pathname === "/materias") &&
-          !pathname.startsWith("/estudiantes") ? (
-            <li>
-              <Link href="/materias" className=" hover:text-sky-400">
-                Materias
-              </Link>
-            </li>
-          ) : null}
-          {(pathname.startsWith("/materias") ||
-            pathname.startsWith("/estudiantes")) &&
-          !pathname.endsWith("/new") ? (
-            <li>
-              <ButtonNuevo pathname={pathname} />
-            </li>
-          ) : null}
+          <Navoptions />
+          {!session?.user ? (
+            <>
+              <li>
+                <Link href="/auth/register" className=" hover:text-sky-400">
+                  Regístrarse
+                </Link>
+              </li>
+              <li>
+                <Link href="/auth/login" className=" hover:text-sky-400">
+                  Iniciar Sesión
+                </Link>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <Link href="/dashboard" className=" hover:text-sky-400">
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                //TODO: Crear una alerta que permita cerrar sesion
+                <Link href="/api/auth/signout" className=" hover:text-sky-400">
+                  Cerrar Sesión
+                </Link>
+              </li>
+            </>
+          )}
         </ul>
       </div>
     </nav>
