@@ -13,7 +13,7 @@ async function Navbar() {
           <Link href="/">Cuando Me Recibo?</Link>
         </h3>
         <ul className="flex gap-x-4 text-2xl font-bold text-sky-500">
-          <Navoptions />
+          {session?.user.name === "admin" && <Navoptions />}
           {!session?.user ? (
             <>
               <li>

@@ -15,6 +15,7 @@ async function fetchEstudiante(email) {
 
 async function DashboardPage() {
   const session = await getServerSession(authOptions);
+//TODO: Buscar una opcion que permita devolver la id con la sesion para no tener q volver a llamar a la bd (callback maybe)
   const estudiante = await fetchEstudiante(session.user.email);
   return (
     <section className="h-[calc(100hv-7rem)] flex justify-center items-center">
