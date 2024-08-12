@@ -2,33 +2,53 @@ import { getServerSession } from "next-auth/next";
 import axios from "axios";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import Link from "next/link";
+import { Button } from "@nextui-org/react";
 
-async function fetchEstudiante(email) {
-  const { data: usuario } = await axios.get(
-    `http://localhost:3000/api/usuarios?email=${email}`
-  );
-  const { data: estudiante } = await axios.get(
-    `http://localhost:3000/api/estudiantes/${usuario.id}`
-  );
-  return estudiante;
+async function fetchEstudiante(id) {
+  try {
+    const { data: estudiante } = await axios.get(
+      `http://localhost:3000/api/estudiantes/${id}`
+    );
+    return estudiante;
+  } catch (error) {
+    if (error.response === 404) {
+      return null;
+    } else {
+      throw new Error("Error")
+    }
+  }
 }
 
 async function DashboardPage() {
   const session = await getServerSession(authOptions);
-//TODO: Buscar una opcion que permita devolver la id con la sesion para no tener q volver a llamar a la bd (callback maybe)
-  const estudiante = await fetchEstudiante(session.user.email);
+  const estudiante = await fetchEstudiante(session.user.id);
   return (
     <section className="h-[calc(100hv-7rem)] flex justify-center items-center">
       <div className="p-6 bg-white rounded">
         <h1 className="block text-slate-900 text-xl font-bold mb-2">
           Dashboard
         </h1>
-        <p>Nombre: {estudiante.nombre}</p>
-        <p>Apellido: {estudiante.apellido}</p>
+        {estudiante && (
+          <div>
+            <p>Nombre: {estudiante.nombre}</p>
+            <p>Apellido: {estudiante.apellido}</p>
+          </div>
+        )}
         <p>Nombre de usuario: {session.user.name}</p>
-        <p>DNI: {estudiante.dni}</p>
-        <p>Fecha de nacimiento: {estudiante.fechaNac}</p>
+        {estudiante && (
+          <div>
+            <p>DNI: {estudiante.dni}</p>
+            <p>Fecha de nacimiento: {estudiante.fechaNac}</p>
+          </div>
+        )}
         <p className=" mb-3">Correo electronico: {session.user.email}</p>
+        {!estudiante && (
+          <div>
+            <Button className=" bg-red-500">
+              Registrar datos del estudiante
+            </Button>
+          </div>
+        )}
         <div className="flex justify-end">
           <Link
             href="./"

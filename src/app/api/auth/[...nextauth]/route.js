@@ -20,7 +20,6 @@ export const authOptions = {
         },
       },
       async authorize(credentials, req) {
-
         const rows = await conn.query(
           "SELECT * FROM usuarios WHERE email = ?",
           credentials.email
@@ -32,7 +31,6 @@ export const authOptions = {
           credentials.password,
           userFound.password
         );
-
         if (!matchPassword) throw new Error("Contraseña incorrecta");
 
         return {
@@ -43,9 +41,17 @@ export const authOptions = {
       },
     }),
   ],
+  callbacks: {
+    async session({ session, token }) {
+      if (session?.user) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
+  },
   pages: {
-    signIn: "/auth/login"
-  }
+    signIn: "/auth/login",
+  },
 };
 
 const handler = NextAuth(authOptions);
