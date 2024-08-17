@@ -1,5 +1,5 @@
 import axios from "axios";
-import CheckboxCondicion from "./CheckboxCondicion";
+import CheckboxTiene from "./CheckboxTiene";
 import { useEffect, useState } from "react";
 
 async function fetchMaterias(nivel) {
@@ -9,7 +9,7 @@ async function fetchMaterias(nivel) {
   return data;
 }
 
-function FormCondicion({ nombreCondicion, materia, listaCondicion }) {
+function FormTiene({ nombreCondicion, materia, listaCondicion }) {
   const [materias, setMaterias] = useState([]);
   const [condicion, setCondicion] = useState(listaCondicion);
   const [loading, setLoading] = useState(true);
@@ -36,7 +36,7 @@ function FormCondicion({ nombreCondicion, materia, listaCondicion }) {
   if (loading) {
     return <div>Loading...</div>;
   }
-
+//TODO: Tiene que mostrar lista de materias en las que no tengo condicion
   return (
     <div>
       <h1 className="font-bold text-2xl mb-4">
@@ -47,7 +47,7 @@ function FormCondicion({ nombreCondicion, materia, listaCondicion }) {
           .filter((mat) => mat.id !== materia.id)
           .map((mat) => (
             <li key={mat.id} className="flex items-center">
-              <CheckboxCondicion
+              <CheckboxTiene
                 defaultSelected={condicion.includes(mat.id)}
                 materia={mat}
                 nombreCondicion={nombreCondicion}
@@ -59,4 +59,4 @@ function FormCondicion({ nombreCondicion, materia, listaCondicion }) {
   );
 }
 
-export default FormCondicion;
+export default FormTiene;

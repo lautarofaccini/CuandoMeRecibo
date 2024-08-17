@@ -14,6 +14,7 @@ async function fetchEstudiante(id) {
     if (error.response === 404) {
       return null;
     } else {
+      //Incheckeable esto
       throw new Error("Error")
     }
   }
