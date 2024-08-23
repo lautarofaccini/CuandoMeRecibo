@@ -1,22 +1,19 @@
 import axios from "axios";
-import CheckboxTiene from "./CheckboxTiene";
 import { useEffect, useState } from "react";
+import CheckboxTiene from "./CheckboxTiene";
 
-async function fetchMaterias(nivel) {
-  const { data } = await axios.get(
-    "http://localhost:3000/api/materias?nivel=" + nivel
-  );
+async function fetchMaterias() {
+  const { data } = await axios.get("http://localhost:3000/api/materias");
   return data;
 }
 
-function FormTiene({ nombreCondicion, materia, listaCondicion }) {
+function FormTiene() {
   const [materias, setMaterias] = useState([]);
-  const [condicion, setCondicion] = useState(listaCondicion);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     async function loadData() {
       try {
-        const loadedMaterias = await fetchMaterias(materia.nivel);
+        const loadedMaterias = await fetchMaterias();
         setMaterias(loadedMaterias);
         setLoading(false);
       } catch (error) {
@@ -26,35 +23,36 @@ function FormTiene({ nombreCondicion, materia, listaCondicion }) {
     }
 
     loadData();
-  }, [materia.id]);
-
-  useEffect(() => {
-    // Actualizar condicion cuando listaCondicion cambie
-    setCondicion(listaCondicion);
-  }, [listaCondicion]);
+  }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="text-gray-800">Loading...</div>;
   }
-//TODO: Tiene que mostrar lista de materias en las que no tengo condicion
+  //TODO: Tiene que mostrar lista de materias en las que no tengo condicion
+
+  //TODO: Hacer una grilla de 3 columnas y poner el map en cada una
+
+  //TODO: Texto responsive
   return (
-    <div>
-      <h1 className="font-bold text-2xl mb-4">
-        {nombreCondicion === "regularizada" ? "Regular" : "Aprobado"}
-      </h1>
-      <ul>
-        {materias
-          .filter((mat) => mat.id !== materia.id)
-          .map((mat) => (
-            <li key={mat.id} className="flex items-center">
-              <CheckboxTiene
-                defaultSelected={condicion.includes(mat.id)}
-                materia={mat}
-                nombreCondicion={nombreCondicion}
-              />
-            </li>
-          ))}
-      </ul>
+    <div className="text-gray-800 ">
+      <div className=" grid grid-cols-3 gap-4">
+        <h1 className=" font-bold text-xl mb-4 col-span-2">Materias</h1>
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex justify-center">
+            <h1 className=" font-bold text-xl mb-4">Regularizada</h1>
+          </div>
+          <div className="flex justify-center">
+            <h1 className=" font-bold text-xl mb-4">Aprobada</h1>
+          </div>
+        </div>
+      </div>
+      {materias.map((mat) => (
+        <div key={mat.id} className="content-centers grid grid-cols-3 gap-4">
+          <p className="col-span-2">{mat.asignatura}</p>
+
+          <CheckboxTiene materia={mat}></CheckboxTiene>
+        </div>
+      ))}
     </div>
   );
 }

@@ -39,7 +39,7 @@ function FormCondicion({ nombreCondicion, materia, listaCondicion }) {
 
   return (
     <div>
-      <h1 className="font-bold text-2xl mb-4">
+      <h1 className="font-bold text-2xl mb-4 text-gray-800">
         {nombreCondicion === "regularizada" ? "Regular" : "Aprobado"}
       </h1>
       <ul>
