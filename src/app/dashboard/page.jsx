@@ -29,6 +29,8 @@ async function DashboardPage() {
         <h1 className="block text-slate-900 text-xl font-bold mb-2">
           Dashboard
         </h1>
+        <div className="text-gray-800">
+
         {estudiante && (
           <div>
             <p>Nombre: {estudiante.nombre}</p>
@@ -43,10 +45,11 @@ async function DashboardPage() {
           </div>
         )}
         <p className=" mb-3">Correo electronico: {session.user.email}</p>
+        </div>
         {!estudiante && (
           <div>
             <Button className=" bg-red-500">
-              Registrar datos del estudiante
+              TODO: Registrar datos del estudiante
             </Button>
           </div>
         )}
