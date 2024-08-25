@@ -28,11 +28,11 @@ function FormTiene({regularizo, aprobo}) {
   if (loading) {
     return <div className="text-gray-800">Loading...</div>;
   }
-  //TODO: Tiene que mostrar lista de materias en las que no tengo condicion
 
-  //TODO: Hacer una grilla de 3 columnas y poner el map en cada una
 
-  //TODO: Texto responsive
+  //TODO: Solo mostrar las materias disponibles, e ir mostrando dinamicamente las materias que se desbloquean al aprobar o regularizar una
+  //TODO: Un boton de entrada manual, que te muestre todas las materias sin limite
+  //TODO: Pasarle al filtro un arreglo de ids que puede cursar, teniendo en cuenta las que regularizo y aprobo
   return (
     <div className="text-gray-800 ">
       <div className=" grid grid-cols-3 gap-4">
@@ -46,7 +46,9 @@ function FormTiene({regularizo, aprobo}) {
           </div>
         </div>
       </div>
-      {materias.map((mat) => (
+      {materias
+      .filter((mat) => mat.nivel <= 1)
+      .map((mat) => (
         <div key={mat.id} className="content-centers grid grid-cols-3 gap-4">
           <p className="col-span-2">{mat.asignatura}</p>
 
