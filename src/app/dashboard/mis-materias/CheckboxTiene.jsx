@@ -1,9 +1,9 @@
 import { Checkbox } from "@nextui-org/react";
 import { useState } from "react";
 
-function CheckboxTiene({ materia }) {
-  const [isSelectedReg, setIsSelectedReg] = useState(false);
-  const [isSelectedApr, setIsSelectedApr] = useState(false);
+function CheckboxTiene({ regSelected, aprSelected, materia }) {
+  const [isSelectedReg, setIsSelectedReg] = useState(regSelected);
+  const [isSelectedApr, setIsSelectedApr] = useState(aprSelected);
 
   function toggleSelection(box) {
     if (box === 0) {
@@ -29,7 +29,7 @@ function CheckboxTiene({ materia }) {
         <Checkbox
           isSelected={isSelectedReg}
           value={materia.id}
-          name={"regularizada"}
+          name={"regularizo"}
           onValueChange={() => toggleSelection(0)}
         />
       </div>
@@ -37,7 +37,7 @@ function CheckboxTiene({ materia }) {
         <Checkbox
           isSelected={isSelectedApr}
           value={materia.id}
-          name={"aprobada"}
+          name={"aprobo"}
           onValueChange={() => toggleSelection(1)}
         />
       </div>

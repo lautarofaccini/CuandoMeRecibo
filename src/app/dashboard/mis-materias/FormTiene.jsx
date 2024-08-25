@@ -7,7 +7,7 @@ async function fetchMaterias() {
   return data;
 }
 
-function FormTiene() {
+function FormTiene({regularizo, aprobo}) {
   const [materias, setMaterias] = useState([]);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -50,7 +50,11 @@ function FormTiene() {
         <div key={mat.id} className="content-centers grid grid-cols-3 gap-4">
           <p className="col-span-2">{mat.asignatura}</p>
 
-          <CheckboxTiene materia={mat}></CheckboxTiene>
+          <CheckboxTiene
+            regSelected={regularizo.includes(mat.id)}
+            aprSelected={aprobo.includes(mat.id)}
+            materia={mat}
+          ></CheckboxTiene>
         </div>
       ))}
     </div>
