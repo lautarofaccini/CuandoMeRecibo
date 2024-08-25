@@ -76,8 +76,7 @@ async function ActualizarCondiciones(nombreCondicion, condicion, data, dni) {
     }
     // Esperar a que todas las promesas se resuelvan
     salida = await Promise.all(salida);
-
-    return salida.map((reg) => reg.idAnteces).sort((a, b) => a - b);
+    return salida.map((reg) => reg.id).sort((a, b) => a - b);
     //TODO: Testear con mas convinaciones
   } else {
     return condicion;
