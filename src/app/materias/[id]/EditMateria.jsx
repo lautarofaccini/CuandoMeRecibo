@@ -187,7 +187,7 @@ function EditMateria({ paramId }) {
   };
   return (
     <div className="flex justify-center items-center gap-x-4">
-      <div className="p-6 bg-white rounded">
+      <div className="text-gray-800 p-6 bg-white rounded">
         <p>Numero de materia: {materia.id}</p>
         <p>Nombre de materia: {materia.asignatura}</p>
         <p>Año: {materia.nivel}</p>

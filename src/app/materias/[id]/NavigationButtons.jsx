@@ -8,7 +8,7 @@ function NavigationButtons({ paramId }) {
     <div className="flex justify-end gap-2">
       {paramId !== 1 && (
         <Button
-          className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-3 rounded"
+          className="bg-blue-500 hover:bg-blue-700 py-2 px-3 rounded"
           onClick={() => {
             const prevId = parseInt(paramId, 10) - 1;
             router.push("/materias/" + prevId);
@@ -18,7 +18,7 @@ function NavigationButtons({ paramId }) {
         </Button>
       )}
       <Button
-        className="text-white bg-blue-500 hover:bg-blue-700 py-2 px-3 rounded"
+        className="bg-blue-500 hover:bg-blue-700 py-2 px-3 rounded"
         onClick={() => {
           const nextId = parseInt(paramId, 10) + 1;
           router.push("/materias/" + nextId);

@@ -13,7 +13,7 @@ export default function RootLayout({ children }) {
         <Providers>
           <main>
             <Navbar />
-            <div className="h-[calc(100vh)-5rem] text-gray-800 container mx-auto">
+            <div className="h-[calc(100vh)-5rem] container mx-auto">
               {children}
             </div>
           </main>

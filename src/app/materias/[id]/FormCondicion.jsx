@@ -6,7 +6,6 @@ async function fetchMaterias(nivel) {
   const { data } = await axios.get(
     "http://localhost:3000/api/materias?nivel=" + nivel
   );
-  //TODO: Solo se deben cargar materias de años menores al de la materia en cuestion
   return data;
 }
 
@@ -40,7 +39,7 @@ function FormCondicion({ nombreCondicion, materia, listaCondicion }) {
 
   return (
     <div>
-      <h1 className="font-bold text-2xl mb-4">
+      <h1 className="font-bold text-2xl mb-4 text-gray-800">
         {nombreCondicion === "regularizada" ? "Regular" : "Aprobado"}
       </h1>
       <ul>
