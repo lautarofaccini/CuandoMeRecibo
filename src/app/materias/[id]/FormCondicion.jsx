@@ -1,6 +1,7 @@
 import axios from "axios";
 import CheckboxCondicion from "./CheckboxCondicion";
 import { useEffect, useState } from "react";
+import Loading from "@/components/Loading";
 
 async function fetchMaterias(nivel) {
   const { data } = await axios.get(
@@ -34,9 +35,8 @@ function FormCondicion({ nombreCondicion, materia, listaCondicion }) {
   }, [listaCondicion]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading/>;
   }
-
   return (
     <div>
       <h1 className="font-bold text-2xl mb-4 text-gray-800">

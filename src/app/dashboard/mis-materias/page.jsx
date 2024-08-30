@@ -5,6 +5,7 @@ import { getSession } from "next-auth/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Loading from "@/components/Loading";
 
 async function ActualizarCondiciones(nombreCondicion, condicion, data, dni) {
   async function sendUpdate(nuevoId, viejoId) {
@@ -136,7 +137,7 @@ function MisMateriasPage() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading/>;
   }
 
   const handleSubmit = async (e) => {

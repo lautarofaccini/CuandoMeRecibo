@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import CheckboxTiene from "./CheckboxTiene";
+import Loading from "@/components/Loading";
 
 async function fetchMaterias() {
   const { data } = await axios.get("http://localhost:3000/api/materias");
@@ -26,7 +27,7 @@ function FormTiene({regularizo, aprobo}) {
   }, []);
 
   if (loading) {
-    return <div className="text-gray-800">Loading...</div>;
+    return <Loading/>;
   }
 
 
