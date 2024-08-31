@@ -1,7 +1,7 @@
 import { Checkbox } from "@nextui-org/react";
 import { useState } from "react";
 
-function CheckboxTiene({ regSelected, aprSelected, materia }) {
+function CheckboxTiene({ regSelected, aprSelected, materia, onSelectionChange }) {
   const [isSelectedReg, setIsSelectedReg] = useState(regSelected);
   const [isSelectedApr, setIsSelectedApr] = useState(aprSelected);
 
@@ -9,16 +9,20 @@ function CheckboxTiene({ regSelected, aprSelected, materia }) {
     if (box === 0) {
       if (isSelectedReg) {
         setIsSelectedReg(false);
+        onSelectionChange(materia.id, "regularizo", !isSelectedReg);
       } else {
         setIsSelectedReg(true);
         setIsSelectedApr(false);
+        onSelectionChange(materia.id, "regularizo", !isSelectedReg);
       }
     } else if (box === 1) {
       if (isSelectedApr) {
         setIsSelectedApr(false);
+        onSelectionChange(materia.id, "aprobo", !isSelectedApr);
       } else {
         setIsSelectedApr(true);
         setIsSelectedReg(false);
+        onSelectionChange(materia.id, "aprobo", !isSelectedApr);
       }
     }
   }
