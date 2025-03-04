@@ -6,6 +6,7 @@ import FormCondicion from "./FormCondicion";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import NotFound from "@/app/not-found";
+import Loading from "@/components/Loading";
 
 async function fetchCondicion(nombreCondicion, idPadre) {
   try {
@@ -134,7 +135,7 @@ function EditMateria({ paramId }) {
   }, [paramId]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading/>;
   }
   if (notFound) {
     return <NotFound />;

@@ -73,22 +73,93 @@ export async function POST(request) {
   try {
     const { searchParams } = new URL(request.url);
     const condicion = searchParams.get("cond");
+
     if (!condicion) {
       return NextResponse.json(
         { message: "Falta el parámetro 'cond'" },
         { status: 400 }
       );
     }
-    const { idAnteces, idSuces } = await request.json();
-    const query = `INSERT INTO ${conn.escapeId(condicion)} SET ?`;
-    const res = await conn.query(query, {
-      idAnteces,
-      idSuces,
-    });
-    return NextResponse.json({
-      idAnteces,
-      idSuces,
-    });
+
+    const { idAnteces, idSuces, ids } = await request.json();
+    // Caso 1: Si el cuerpo contiene un arreglo de IDs
+    if (ids) {
+      /*Formatos validos:
+      {
+      ids: [..., n],
+      idAnteces: 1
+      } 
+      o
+      {
+      ids: [..., n],
+      idSuces: 1
+      }
+      Devuelve arreglo vacio o con ids segun el que se solicite
+      */ 
+      if (!Array.isArray(ids) || ids.length === 0) {
+        return NextResponse.json(
+          { message: "Arreglo ids invalido" },
+          { status: 400 }
+        );
+      }
+      const isAnteces = idAnteces === 1;
+      const isSuces = idSuces === 1;
+      let query;
+      const placeholders = ids.map(() => "?").join(",");
+      if (isAnteces && !isSuces) {
+        // Consultar por idAnteces
+        query = `SELECT idAnteces FROM ${conn.escapeId(
+          condicion
+        )} WHERE idSuces IN (${placeholders})`;
+      } else if (isSuces && !isAnteces) {
+        // Consultar por idSuces
+        query = `SELECT idSuces FROM ${conn.escapeId(
+          condicion
+        )} WHERE idAnteces IN (${placeholders})`;
+      } else {
+        // Si ninguno de los casos es verdadero, devolver un error
+        return NextResponse.json(
+          { message: "idAnteces o idSuces no validos" },
+          { status: 400 }
+        );
+      }
+      const res = await conn.query(query, ids);
+
+      // Extraer los idSuces, eliminar duplicados y ordenar
+      const idsEncontrados = Array.from(
+        new Set(res.map((row) => row.idAnteces || row.idSuces))
+      ).sort((a, b) => a - b);
+
+      return NextResponse.json(idsEncontrados);
+
+      // Caso 2: Si el cuerpo contiene solo idAnteces e idSuces
+    } else if (idAnteces && idSuces) {
+      if (isNaN(idAnteces) || isNaN(idSuces)) {
+        return NextResponse.json(
+          {
+            message: "Invalid idAnteces or idSuces",
+          },
+          {
+            status: 400,
+          }
+        );
+      }
+      const query = `INSERT INTO ${conn.escapeId(condicion)} SET ?`;
+      const res = await conn.query(query, {
+        idAnteces,
+        idSuces,
+      });
+
+      return NextResponse.json({
+        idAnteces,
+        idSuces,
+      });
+    } else {
+      return NextResponse.json(
+        { message: "El cuerpo de la solicitud es inválido" },
+        { status: 400 }
+      );
+    }
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }

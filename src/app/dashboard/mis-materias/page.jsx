@@ -5,6 +5,7 @@ import { getSession } from "next-auth/react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Loading from "@/components/Loading";
 
 async function ActualizarCondiciones(nombreCondicion, condicion, data, dni) {
   async function sendUpdate(nuevoId, viejoId) {
@@ -111,6 +112,7 @@ function MisMateriasPage() {
   const [regularizo, setRegularizo] = useState([]);
   const [aprobo, setAprobo] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [mostrarTodo, setMostrarTodo] = useState(false);
   const router = useRouter();
   useEffect(() => {
     async function loadData() {
@@ -136,11 +138,12 @@ function MisMateriasPage() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     const formData = new FormData(e.target);
     const dataReg = formData
       .getAll("regularizo")
@@ -167,16 +170,31 @@ function MisMateriasPage() {
     } catch (error) {
       console.error("Error al actualizar materias:", error);
       router.push("/dashboard");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleMostrarTodo = () => {
+    if (mostrarTodo) {
+      setMostrarTodo(false);
+    } else {
+      setMostrarTodo(true);
     }
   };
 
   return (
     <div className="flex justify-center items-center ">
       <form className="p-6 bg-slate-500 rounded" onSubmit={handleSubmit}>
-        <FormTiene regularizo={regularizo} aprobo={aprobo} />
-        <div className="flex justify-end">
-          <Button type="submit" className="mt-3">
-            Guardar
+        <FormTiene
+          regularizo={regularizo}
+          aprobo={aprobo}
+          mostrarTodo={mostrarTodo}
+        />
+        <div className="flex justify-end mt-3 gap-3 ">
+          <Button onClick={handleMostrarTodo}>Mostrar Todo</Button>
+          <Button type="submit" disabled={loading}>
+            {loading ? "Cargando..." : "Guardar"}
           </Button>
         </div>
       </form>
