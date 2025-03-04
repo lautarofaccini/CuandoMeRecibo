@@ -18,7 +18,7 @@ async function Navbar() {
             <>
               <li>
                 <Link href="/auth/register" className=" hover:text-sky-400">
-                  Regístrarse
+                  Registrarse
                 </Link>
               </li>
               <li>

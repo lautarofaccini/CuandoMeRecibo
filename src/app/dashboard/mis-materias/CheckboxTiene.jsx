@@ -1,39 +1,25 @@
 import { Checkbox } from "@nextui-org/react";
-import axios from "axios";
 import { useEffect, useState } from "react";
-
-async function fetchAntecesores(id) {
-  const { data } = await axios.get(
-    `http://localhost:3000/api/condicion/antecesores?id=${id}`
-  );
-  return data;
-}
 
 function CheckboxTiene({
   regSelected,
   aprSelected,
   materia,
   onSelectionChange,
+  disabled,
 }) {
   const [isSelectedReg, setIsSelectedReg] = useState(regSelected);
   const [isSelectedApr, setIsSelectedApr] = useState(aprSelected);
-  const [regularizada, setRegularizada] = useState();
-  const [aprobada, setAprobada] = useState();
 
   useEffect(() => {
-    async function loadData() {
-      try {
-        const { regularizada, aprobada } = await fetchAntecesores(materia.id);
-        // Agrega materias de 1ro y materias que regularizo/aprobo
-        setRegularizada(regularizada);
-        setAprobada(aprobada);
-      } catch (error) {
-        console.error("Error fetching antecesores:", error);
-      }
+    const clearValues = () => {
+      setIsSelectedReg(false);
+      setIsSelectedApr(false);
+    };
+    if (disabled) {
+      clearValues();
     }
-
-    loadData();
-  }, []);
+  }, [disabled]);
 
   function toggleSelection(box) {
     if (box === 0) {
@@ -67,6 +53,7 @@ function CheckboxTiene({
             value={materia.id}
             name={"regularizo"}
             onValueChange={() => toggleSelection(0)}
+            isDisabled={disabled}
           />
         </div>
         <div className="flex justify-center">
@@ -75,6 +62,7 @@ function CheckboxTiene({
             value={materia.id}
             name={"aprobo"}
             onValueChange={() => toggleSelection(1)}
+            isDisabled={disabled}
           />
         </div>
       </div>

@@ -7,19 +7,37 @@ async function fetchMaterias() {
   const { data } = await axios.get("http://localhost:3000/api/materias");
   return data;
 }
+async function fetchAprobadas() {
+  const { data } = await axios.get(
+    "http://localhost:3000/api/condicion?cond=aprobada"
+  );
+  return data;
+}
+async function fetchRegularizadas() {
+  const { data } = await axios.get(
+    "http://localhost:3000/api/condicion?cond=regularizada"
+  );
+  return data;
+}
 
-function FormTiene({ regularizo, aprobo }) {
+function FormTiene({ regularizo, aprobo, mostrarTodo }) {
   const [materias, setMaterias] = useState([]);
   const [selectedApr, setSelectedApr] = useState(aprobo);
   const [selectedReg, setSelectedReg] = useState(regularizo);
+  const [materiasCursables, setMateriasCursables] = useState([]);
+  const [condicionesAp, setCondicionesAp] = useState([]);
+  const [condicionesReg, setCondicionesReg] = useState([]);
+
   const [showList, setShowList] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [mostrar, setMostrar] = useState(false);
 
   useEffect(() => {
     async function loadData() {
       try {
         const loadedMaterias = await fetchMaterias();
-        // Agrega materias de 1ro y materias que regularizo/aprobo
+        const condicionesAprobadas = await fetchAprobadas();
+        const condicionesRegularizadas = await fetchRegularizadas();
         const listaMaterias = Array.from(
           new Set(
             loadedMaterias
@@ -27,23 +45,84 @@ function FormTiene({ regularizo, aprobo }) {
                 (mat) =>
                   mat.nivel === 1 ||
                   regularizo.includes(mat.id) ||
-                  aprobo.includes(mat.id)
+                  aprobo.includes(mat.id) ||
+                  materiasCursables.includes(mat)
               )
               .map((mat) => mat.id)
           )
         ).map((id) => loadedMaterias.find((mat) => mat.id === id));
 
         setMaterias(loadedMaterias);
+        setCondicionesAp(condicionesAprobadas);
+        setCondicionesReg(condicionesRegularizadas);
         setShowList(listaMaterias);
-        setLoading(false);
       } catch (error) {
         console.error("Error fetching materias:", error);
+      } finally {
         setLoading(false);
       }
     }
 
     loadData();
   }, []);
+
+  useEffect(() => {
+    const actualizarMateriasCursables = () => {
+      const cursables = materias.filter((mat) => puedeCursar(mat.id));
+      setMateriasCursables(cursables);
+    };
+
+    actualizarMateriasCursables();
+  }, [materias, selectedApr, selectedReg]);
+
+  useEffect(() => {
+    if (mostrarTodo) {
+      setShowList(materias);
+    } else {
+      const listaMaterias = Array.from(
+        new Set(
+          materias
+            .filter(
+              (mat) =>
+                mat.nivel === 1 ||
+                regularizo.includes(mat.id) ||
+                aprobo.includes(mat.id) ||
+                materiasCursables.includes(mat)
+            )
+            .map((mat) => mat.id)
+        )
+      ).map((id) => materias.find((mat) => mat.id === id));
+      setShowList(listaMaterias);
+    }
+  }, [mostrarTodo, materias, regularizo, aprobo, materiasCursables]);
+
+  const puedeCursar = (materiaId) => {
+    const condicionesAprob = condicionesAp.filter(
+      (cond) => cond.idSuces === materiaId
+    );
+    const condicionesRegu = condicionesReg.filter(
+      (cond) => cond.idSuces === materiaId
+    );
+
+    return (
+      condicionesAprob.every((cond) => selectedApr.includes(cond.idAnteces)) &&
+      condicionesRegu.every(
+        (cond) =>
+          selectedApr.includes(cond.idAnteces) ||
+          selectedReg.includes(cond.idAnteces)
+      )
+    );
+  };
+
+  //Agrupa las materias por nivel en un arreglo
+  const groupedMaterias = showList.reduce((acc, mat) => {
+    const { nivel } = mat;
+    if (!acc[nivel]) {
+      acc[nivel] = [];
+    }
+    acc[nivel].push(mat);
+    return acc;
+  }, {});
 
   // Maneja la actualización de las materias regularizadas o aprobadas
   const handleSelectionChange = (id, type, value) => {
@@ -69,34 +148,9 @@ function FormTiene({ regularizo, aprobo }) {
     return <Loading />;
   }
 
-  //TODO: Solo mostrar las materias disponibles, e ir mostrando dinamicamente las materias que se desbloquean al aprobar o regularizar una
-  //TODO: Un boton de entrada manual, que te muestre todas las materias sin limite
-  //TODO: Pasarle al filtro un arreglo de ids que puede cursar, teniendo en cuenta las que regularizo y aprobo
-  //TODO: Solo se puede agregar una materia si se tienen todas sus antecesoras
+  //Si viene con una materia invalida como cursada, no se va a mostrar y se eliminara en el proximo guardado
+  ///TODO: Carga forzada
 
-  //Opciones:
-  //Cargar todas las materias en un arreglo e ir mostrandola dependiendo de las materias aprobadas/regularizadas
-  //Pros:
-  //Se puede cambiar a la manual rapidamente
-  //Se cargan las materias una sola vez y despues se va mostrando el arreglo
-  //Contras:
-  //Tarda mas la primera vez
-  //Cargar solamente las materias que puede cursar
-  //Pros:
-  //Solamente se dispone de los datos necesarios
-  //Contras:
-  //Opcion manual tiene que volver a llamar a todas las materias
-
-  /*TODO: Se tienen q mostrar:
-    Materias de primero
-    Materias que tiene condicion
-    Materias que pueda tener condicion
-    */
-
-    //Tenemos showList, tiene las materias iniciales y todas sus sucesoras, en el componente de la lista se tiene que analizar si esa materia cumple para mostrarse, si cumple, retorna la materia, sino, retorna vacio. 
-    //Cumple para mostrarse si el usuario regularizo o aprobo las materias que la materia pide regularizadas y si aprobo las materias que la materia pide como aprobada
-    //Cuando una materia cumple para mostrarse, se debe agregar sus sucesores a la showList para que se analicen esos nuevos elementos
-    //Cuando se rompe una condicion, se deben romper todos los enlaces mayores
   return (
     <div className="text-gray-800 ">
       <div className=" grid grid-cols-3 gap-4">
@@ -110,14 +164,20 @@ function FormTiene({ regularizo, aprobo }) {
           </div>
         </div>
       </div>
-      {showList.map((mat) => (
-        <CheckboxTiene
-          key={mat.id}
-          regSelected={regularizo.includes(mat.id)}
-          aprSelected={aprobo.includes(mat.id)}
-          materia={mat}
-          onSelectionChange={handleSelectionChange}
-        />
+      {Object.keys(groupedMaterias).map((nivel) => (
+        <div key={nivel}>
+          <h2 className="font-bold text-lg mb-2">{`Año ${nivel}`}</h2>
+          {groupedMaterias[nivel].map((mat) => (
+            <CheckboxTiene
+              key={mat.id}
+              regSelected={regularizo.includes(mat.id)}
+              aprSelected={aprobo.includes(mat.id)}
+              materia={mat}
+              onSelectionChange={handleSelectionChange}
+              disabled={!puedeCursar(mat.id)}
+            />
+          ))}
+        </div>
       ))}
     </div>
   );
