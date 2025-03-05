@@ -5,7 +5,6 @@ import { Button } from "@nextui-org/react";
 import FormCondicion from "./FormCondicion";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import NotFound from "@/app/not-found";
 import Loading from "@/components/Loading";
 
 async function fetchCondicion(nombreCondicion, idPadre) {
@@ -101,20 +100,18 @@ async function ActualizarCondiciones(nombreCondicion, condicion, data, id) {
   }
 }
 
-function EditMateria({ paramId }) {
+function EditMateria({ paramId, materias }) {
   const [materia, setMateria] = useState([]);
   const [regularizada, setRegularizada] = useState([]);
   const [aprobada, setAprobada] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     async function loadData() {
+      setMateria(materias[paramId - 1]);
       try {
-        const loadedMateria = await fetchMateria();
-        setMateria(loadedMateria);
         const loadedRegularizada = await fetchCondicion(
           "regularizada",
           paramId
@@ -123,38 +120,16 @@ function EditMateria({ paramId }) {
         setRegularizada(loadedRegularizada);
         setAprobada(loadedAprobada);
       } catch (error) {
-        if (error.message === "Materia not found") {
-          setNotFound(true);
-        } else {
-          console.log(error);
-        }
+        console.log(error);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     }
     loadData();
   }, [paramId]);
 
   if (loading) {
-    return <Loading/>;
-  }
-  if (notFound) {
-    return <NotFound />;
-  }
-
-  async function fetchMateria() {
-    try {
-      const { data } = await axios.get(
-        `http://localhost:3000/api/materias/${paramId}`
-      );
-      return data;
-    } catch (error) {
-      if (error.response && error.response.status === 404) {
-        throw new Error("Materia not found");
-      } else {
-        console.error("Error fetching materia:", error);
-        throw error;
-      }
-    }
+    return <Loading />;
   }
 
   const handleShowForm = () => {
@@ -204,11 +179,13 @@ function EditMateria({ paramId }) {
                 nombreCondicion="regularizada"
                 materia={materia}
                 listaCondicion={regularizada}
+                materias={materias}
               />
               <FormCondicion
                 nombreCondicion="aprobada"
                 materia={materia}
                 listaCondicion={aprobada}
+                materias={materias}
               />
             </div>
             <div className="flex justify-end">

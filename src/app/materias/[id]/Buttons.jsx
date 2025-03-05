@@ -1,6 +1,5 @@
-"use client";
-import { Button } from "@nextui-org/react";
 import axios from "axios";
+import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
 
 function Buttons({ materia, onShowForm }) {
@@ -31,14 +30,12 @@ function Buttons({ materia, onShowForm }) {
       >
         Edit
       </Button>
-      {materia.nivel !== 1 && (
-        <Button
-          className="bg-gray-500 hover:bg-gray-700 py-2 px-3 rounded"
-          onClick={onShowForm}
-        >
-          Correlatividad
-        </Button>
-      )}
+      <Button
+        className="bg-gray-500 hover:bg-gray-700 py-2 px-3 rounded"
+        onClick={onShowForm}
+      >
+        Correlatividad
+      </Button>
     </div>
   );
 }
