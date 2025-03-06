@@ -24,13 +24,13 @@ function FormTiene({ regularizo, aprobo, mostrarTodo }) {
   const [materias, setMaterias] = useState([]);
   const [selectedApr, setSelectedApr] = useState(aprobo);
   const [selectedReg, setSelectedReg] = useState(regularizo);
-  const [materiasCursables, setMateriasCursables] = useState([]);
+
   const [condicionesAp, setCondicionesAp] = useState([]);
   const [condicionesReg, setCondicionesReg] = useState([]);
-
+  const [materiasCursables, setMateriasCursables] = useState([]);
+  
   const [showList, setShowList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [mostrar, setMostrar] = useState(false);
 
   useEffect(() => {
     async function loadData() {

@@ -83,6 +83,86 @@ async function ActualizarCondiciones(nombreCondicion, condicion, data, dni) {
     return condicion;
   }
 }
+/* 
+Codigo generado para reemplazar el codigo de arriba, no testeado aun
+TODO: Testear
+import axios from "axios";
+
+async function actualizarCondiciones(nombreCondicion, condicion, data, id, tipoId = "dni") {
+  async function sendUpdate(nuevoId, viejoId) {
+    const payload = {
+      [tipoId === "dni" ? "id" : "idAnteces"]: nuevoId,
+    };
+    const res = await axios.put(
+      `/api/${tipoId === "dni" ? "tiene" : "condicion"}?cond=${nombreCondicion}&id=${viejoId}&${tipoId}=${id}`,
+      payload
+    );
+    return res.data;
+  }
+
+  async function sendCreate(nuevoId) {
+    const payload = {
+      [tipoId === "dni" ? "id" : "idAnteces"]: nuevoId,
+      [tipoId]: id,
+    };
+    const res = await axios.post(`/api/${tipoId === "dni" ? "tiene" : "condicion"}?cond=${nombreCondicion}`, payload);
+    return res.data;
+  }
+
+  async function sendDelete(idElim) {
+    const res = await axios.delete(
+      `/api/${tipoId === "dni" ? "tiene" : "condicion"}?cond=${nombreCondicion}&id=${idElim}&${tipoId}=${id}`
+    );
+    if (res.status !== 204) {
+      console.log("Error al eliminar materia: ", res);
+    }
+  }
+
+  if (JSON.stringify(data) !== JSON.stringify(condicion)) {
+    //! Si en algun momento se desordenan las listas, esta comparacion podria dar un falso positivo
+    const dataAux = data.filter((elemento) => !condicion.includes(elemento));
+    const condAux = condicion.filter((elemento) => !data.includes(elemento));
+    const Iguales = condicion.filter((elemento) => data.includes(elemento));
+    let salida = [];
+    for (let i = 0; i < Iguales.length; i++) {
+      salida.push({
+        [tipoId === "dni" ? "id" : "idAnteces"]: Iguales[i],
+        [tipoId]: id,
+      });
+    }
+    if (dataAux.length !== condAux.length) {
+      if (dataAux.length > condAux.length) {
+        let dLenght = dataAux.length;
+        for (let i = 0; i < dLenght - condAux.length; i++) {
+          salida.push(sendCreate(dataAux[0]));
+          dataAux.shift();
+        }
+      } else {
+        let rLenght = condAux.length;
+        for (let i = 0; i < rLenght - dataAux.length; i++) {
+          sendDelete(condAux[0]);
+          condAux.shift();
+        }
+      }
+    }
+    if (dataAux.length !== 0 || condAux.length !== 0) {
+      // Misma longitud
+      for (let i = 0; i < condAux.length; i++) {
+        salida.push(sendUpdate(dataAux[0], condAux[i]));
+        dataAux.shift();
+      }
+    }
+    // Esperar a que todas las promesas se resuelvan
+    salida = await Promise.all(salida);
+    return salida.map((reg) => reg[tipoId === "dni" ? "id" : "idAnteces"]).sort((a, b) => a - b);
+    //TODO: Testear con mas convinaciones
+  } else {
+    return condicion;
+  }
+}
+
+export default actualizarCondiciones;
+*/
 
 async function fetchEstudiante(id) {
   try {
