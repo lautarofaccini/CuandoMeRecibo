@@ -1,19 +1,24 @@
 import { Button } from "@nextui-org/react";
-import CheckboxSet from "./CheckboxSet";
 import { useEffect, useState } from "react";
+import CheckboxSet from "./CheckboxSet";
 
-function FormTest({
+// Funciones predeterminadas que no hacen nada
+const noop = () => {};
+
+function FormCondiciones({
   materias,
   listaMaterias,
-  regularizo,
-  aprobo,
-  onSelectedAprChange,
-  onSelectedRegChange,
+  defaultSelectedReg,
+  defaultSelectedApr,
+  onSelectedRegChange = noop,
+  onSelectedAprChange = noop,
   deshabilitar,
+  actualizar,
+  loading,
 }) {
   //selectedApr y selectedReg son las materias que se seleccionan en el formulario, actualizadas dinamicamente
-  const [selectedApr, setSelectedApr] = useState(aprobo);
-  const [selectedReg, setSelectedReg] = useState(regularizo);
+  const [selectedApr, setSelectedApr] = useState(defaultSelectedApr);
+  const [selectedReg, setSelectedReg] = useState(defaultSelectedReg);
   const [materiasMostradas, setMateriasMostradas] = useState(listaMaterias);
   const [mostrarTodo, setMostrarTodo] = useState(false);
 
@@ -62,6 +67,7 @@ function FormTest({
       .getAll("regularizo")
       .map((item) => parseInt(item, 10));
     const dataApr = formData.getAll("aprobo").map((item) => parseInt(item, 10));
+    actualizar(dataReg, dataApr);
   };
 
   // Reiniciar formulario
@@ -112,8 +118,8 @@ function FormTest({
                       {materiasMostradas.map((materia) => (
                         <CheckboxSet
                           key={materia.id}
-                          regSelected={regularizo.includes(materia.id)}
-                          aprSelected={aprobo.includes(materia.id)}
+                          regSelected={defaultSelectedReg.includes(materia.id)}
+                          aprSelected={defaultSelectedApr.includes(materia.id)}
                           materia={materia}
                           onSelectionChange={handleSelectionChange}
                           disabled={
@@ -130,7 +136,9 @@ function FormTest({
               <Button onClick={handleMostrarTodo}>
                 {mostrarTodo ? "Mostrar Menos" : "Mostrar Todo"}
               </Button>
-              <Button type="submit">Guardar</Button>
+              <Button type="submit" isLoading={loading}>
+                {loading ? "Guardando..." : "Guardar"}
+              </Button>
             </div>
           </form>
         </div>
@@ -144,4 +152,4 @@ function FormTest({
   );
 }
 
-export default FormTest;
+export default FormCondiciones;

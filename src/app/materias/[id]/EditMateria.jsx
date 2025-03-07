@@ -1,10 +1,9 @@
 "use client";
-import axios from "axios";
-import Buttons from "./Buttons";
-import { Button } from "@nextui-org/react";
-import FormCondicion from "./FormCondicion";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+import FormCondiciones from "@/components/FormCondiciones";
+import Buttons from "./Buttons";
 import Loading from "@/components/Loading";
 
 async function fetchCondicion(nombreCondicion, idPadre) {
@@ -101,24 +100,42 @@ async function ActualizarCondiciones(nombreCondicion, condicion, data, id) {
 }
 
 function EditMateria({ paramId, materias }) {
-  const [materia, setMateria] = useState([]);
+  const [materia, setMateria] = useState(materias[paramId - 1]);
   const [regularizada, setRegularizada] = useState([]);
   const [aprobada, setAprobada] = useState([]);
   const [showForm, setShowForm] = useState(false);
+
+  const [showList, setShowList] = useState([]);
+
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     async function loadData() {
-      setMateria(materias[paramId - 1]);
+      console.log(materia);
       try {
         const loadedRegularizada = await fetchCondicion(
           "regularizada",
           paramId
         );
         const loadedAprobada = await fetchCondicion("aprobada", paramId);
+        console.log(regularizada, aprobada);
+
         setRegularizada(loadedRegularizada);
         setAprobada(loadedAprobada);
+
+        const listaMaterias = Array.from(
+          new Set(
+            materias
+              .filter(
+                (mat) => mat.id !== materia.id && mat.nivel <= materia.nivel
+              )
+              .map((mat) => mat.id)
+          )
+        ).map((id) => materias.find((mat) => mat.id === id));
+
+        setShowList(listaMaterias);
       } catch (error) {
         console.log(error);
       } finally {
@@ -136,20 +153,12 @@ function EditMateria({ paramId, materias }) {
     setShowForm(!showForm);
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const dataReg = formData
-      .getAll("regularizada")
-      .map((item) => parseInt(item, 10));
-    const dataAp = formData
-      .getAll("aprobada")
-      .map((item) => parseInt(item, 10));
-
+  const handleActualizar = async (dataReg, dataApr) => {
+    setSubmitting(true);
     try {
       const [regResult, apResult] = await Promise.all([
         ActualizarCondiciones("regularizada", regularizada, dataReg, paramId),
-        ActualizarCondiciones("aprobada", aprobada, dataAp, paramId),
+        ActualizarCondiciones("aprobada", aprobada, dataApr, paramId),
       ]);
       // Actualizar el estado con los resultados
       setRegularizada(regResult);
@@ -158,9 +167,11 @@ function EditMateria({ paramId, materias }) {
       alert("Correlatividades actualizadas");
     } catch (error) {
       console.error("Error al actualizar correlatividades:", error);
-      router.push("/materias");
+    } finally {
+      setSubmitting(false);
     }
   };
+
   return (
     <div className="flex justify-center items-center gap-x-4">
       <div className="text-gray-800 p-6 bg-white rounded">
@@ -172,28 +183,15 @@ function EditMateria({ paramId, materias }) {
         <Buttons materia={materia} onShowForm={handleShowForm} />
       </div>
       {showForm && (
-        <div className="p-6 bg-slate-500 rounded">
-          <form onSubmit={handleSubmit}>
-            <div className="flex justify-center items-center gap-x-4">
-              <FormCondicion
-                nombreCondicion="regularizada"
-                materia={materia}
-                listaCondicion={regularizada}
-                materias={materias}
-              />
-              <FormCondicion
-                nombreCondicion="aprobada"
-                materia={materia}
-                listaCondicion={aprobada}
-                materias={materias}
-              />
-            </div>
-            <div className="flex justify-end">
-              <Button type="submit" className="mt-3">
-                Guardar
-              </Button>
-            </div>
-          </form>
+        <div className="flex justify-center items-center ">
+          <FormCondiciones
+            materias={materias}
+            listaMaterias={showList}
+            defaultSelectedReg={regularizada}
+            defaultSelectedApr={aprobada}
+            actualizar={handleActualizar}
+            loading={submitting}
+          />
         </div>
       )}
     </div>
