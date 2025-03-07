@@ -113,14 +113,12 @@ function EditMateria({ paramId, materias }) {
 
   useEffect(() => {
     async function loadData() {
-      console.log(materia);
       try {
         const loadedRegularizada = await fetchCondicion(
           "regularizada",
           paramId
         );
         const loadedAprobada = await fetchCondicion("aprobada", paramId);
-        console.log(regularizada, aprobada);
 
         setRegularizada(loadedRegularizada);
         setAprobada(loadedAprobada);

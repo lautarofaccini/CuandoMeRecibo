@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth/next";
 import axios from "axios";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import Link from "next/link";
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 
 async function fetchEstudiante(id) {
   try {
@@ -37,34 +37,30 @@ async function DashboardPage() {
               </div>
             )}
             <p>Nombre de usuario: {session.user.name}</p>
-            {estudiante && (
+            <p className=" mb-3">Correo electronico: {session.user.email}</p>
+            {estudiante ? (
               <div>
+                <p>Nombre: {estudiante.nombre}</p>
+                <p>Apellido: {estudiante.apellido}</p>
                 <p>DNI: {estudiante.dni}</p>
                 <p>Fecha de nacimiento: {estudiante.fechaNac}</p>
               </div>
+            ) : (
+              <p>¡Completa tu perfil!</p>
             )}
-            <p className=" mb-3">Correo electronico: {session.user.email}</p>
           </div>
-          {!estudiante && (
-            <div>
-              <Button className=" bg-red-500">
-                TODO: Registrar datos del estudiante
-              </Button>
-            </div>
-          )}
-          
           <div className="flex justify-end">
-          <Link
+            <Link
               href="dashboard/mis-materias"
               className=" bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2"
             >
               Mis Materias
             </Link>
             <Link
-              href="./"
+              href={"dashboard/edit/" + session.user.id}
               className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2 "
             >
-              Editar
+              {estudiante ? "Editar" : "Completar perfil"}
             </Link>
           </div>
         </div>

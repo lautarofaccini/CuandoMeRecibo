@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 
 function Buttons({ materia, onShowForm }) {
@@ -9,7 +9,7 @@ function Buttons({ materia, onShowForm }) {
     <div className="flex gap-x-2 justify-end mt-2">
       <Button
         className="bg-red-500 hover:bg-red-700 py-2 px-3 rounded"
-        onClick={async () => {
+        onPress={async () => {
           if (confirm("¿Seguro que quieres borrar esta materia?")) {
             const res = await axios.delete(`/api/materias/${materia.id}`);
             if (res.status === 204) {
@@ -23,7 +23,7 @@ function Buttons({ materia, onShowForm }) {
       </Button>
       <Button
         className="bg-slate-500 hover:bg-slate-700 py-2 px-3 rounded"
-        onClick={() => {
+        onPress={() => {
           router.push("/materias/edit/" + materia.id);
           router.refresh();
         }}
@@ -32,7 +32,7 @@ function Buttons({ materia, onShowForm }) {
       </Button>
       <Button
         className="bg-gray-500 hover:bg-gray-700 py-2 px-3 rounded"
-        onClick={onShowForm}
+        onPress={onShowForm}
       >
         Correlatividad
       </Button>

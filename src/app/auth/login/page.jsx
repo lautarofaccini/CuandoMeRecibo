@@ -1,6 +1,6 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { Button } from "@nextui-org/react";
+import { Button } from "@heroui/react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";

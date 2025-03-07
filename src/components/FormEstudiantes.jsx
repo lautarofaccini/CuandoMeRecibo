@@ -5,6 +5,8 @@ import axios from "axios";
 import { useRouter, useParams } from "next/navigation";
 
 function FormEstudiantes() {
+  //TODO: Crear usuario con credenciales default y asignarle el estudiante nuevo si se crea desde Estudiantes/New
+  //TODO: Asignarle el id de usuario si se crea desde Dashboard/Perfil
   const [estudiante, setEstudiante] = useState({
     dni: "",
     nombre: "",
@@ -40,6 +42,13 @@ function FormEstudiantes() {
     e.preventDefault();
 
     if (!params.id) {
+      //Crear el usuario, recuperar el id generado y asignarlo al estudiante
+      const { data } = await axios.post("/api/auth/register", {
+        username: estudiante.dni,
+        email: estudiante.dni + "@gmail.com",
+        password: estudiante.dni,
+      });
+      estudiante.id = data.id;
       const res = await axios.post("/api/estudiantes", estudiante);
     } else {
       const res = await axios.put("/api/estudiantes/" + params.id, estudiante);
@@ -92,7 +101,6 @@ function FormEstudiantes() {
         value={estudiante.nombre}
         className="shadow bg-white text-black appearance-none border rounded w-full py-2 px-3 mb-1"
       />
-
       <label
         htmlFor="apellido"
         className="block text-gray-700 text-sm font-bold mb-2"

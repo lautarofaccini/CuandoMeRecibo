@@ -21,13 +21,13 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const { dni, nombre, apellido, fechaNac } =
-      await request.json();
+    const { dni, nombre, apellido, fechaNac, id } = await request.json();
     const res = await conn.query("INSERT INTO estudiantes SET ?", {
       dni,
       nombre,
       apellido,
       fechaNac,
+      id,
     });
 
     return NextResponse.json({
@@ -35,6 +35,7 @@ export async function POST(request) {
       nombre,
       apellido,
       fechaNac,
+      id,
     });
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
