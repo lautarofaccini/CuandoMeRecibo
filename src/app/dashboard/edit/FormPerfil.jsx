@@ -5,6 +5,7 @@ import { Button, DateInput, Form, Input } from "@heroui/react";
 import { CalendarDate, getLocalTimeZone } from "@internationalized/date";
 import axios from "axios";
 import Loading from "@/components/Loading";
+import { useRouter } from "next/navigation";
 
 //Objetivo del componente:
 //Ser un formulario para editar los datos de usuario
@@ -39,6 +40,7 @@ function FormPerfil() {
   const [user, setUser] = useState();
   // Estado para guardar la data original del estudiante (si existe) para comparar cambios
   const [initialEst, setInitialEst] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (!session) return;
@@ -165,6 +167,8 @@ function FormPerfil() {
     } catch (error) {
       console.error("Error al actualizar:", error);
       alert("Error al actualizar los datos");
+    } finally {
+      router.refresh();
     }
   };
 
