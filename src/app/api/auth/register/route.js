@@ -5,14 +5,13 @@ import bcrypt from "bcrypt";
 export async function POST(request) {
   try {
     const { username, email, password } = await request.json();
-    //Verificar si el usuario ya exista
+    //Verificar si el email ya exista
     const femail = await conn.query(
       "SELECT * FROM usuarios WHERE email = ?",
       email
     );
-    const userFound = femail[0]
+    const userFound = femail[0];
     if (userFound) {
-
       return NextResponse.json(
         { message: "El usuario ya existe" },
         { status: 400 }
@@ -24,7 +23,7 @@ export async function POST(request) {
       "SELECT * FROM usuarios WHERE username = ?",
       username
     );
-    const usernameFound = fusern[0]
+    const usernameFound = fusern[0];
     if (usernameFound) {
       return NextResponse.json(
         { message: "El nombre de usuario ya esta en uso" },
@@ -42,7 +41,7 @@ export async function POST(request) {
       "SELECT * FROM usuarios WHERE id = ?",
       res.insertId
     );
-    const {password: _, ...user} = newUser[0]
+    const { password: _, ...user } = newUser[0];
     return NextResponse.json(user);
   } catch (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });

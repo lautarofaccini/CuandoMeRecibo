@@ -133,7 +133,7 @@ function FormCondiciones({
               </div>
             </div>
             <div className="mt-6 flex justify-center gap-3">
-              <Button onClick={handleMostrarTodo}>
+              <Button onPress={handleMostrarTodo}>
                 {mostrarTodo ? "Mostrar Menos" : "Mostrar Todo"}
               </Button>
               <Button type="submit" isLoading={loading}>

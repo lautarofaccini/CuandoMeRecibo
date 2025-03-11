@@ -1,8 +1,7 @@
-import { getServerSession } from "next-auth/next";
 import axios from "axios";
+import { getServerSession } from "next-auth/next";
 import { authOptions } from "../api/auth/[...nextauth]/route";
 import Link from "next/link";
-import { Button } from "@heroui/react";
 
 async function fetchEstudiante(id) {
   try {
@@ -30,12 +29,6 @@ async function DashboardPage() {
             Dashboard
           </h1>
           <div className="text-gray-800">
-            {estudiante && (
-              <div>
-                <p>Nombre: {estudiante.nombre}</p>
-                <p>Apellido: {estudiante.apellido}</p>
-              </div>
-            )}
             <p>Nombre de usuario: {session.user.name}</p>
             <p className=" mb-3">Correo electronico: {session.user.email}</p>
             {estudiante ? (
@@ -57,7 +50,7 @@ async function DashboardPage() {
               Mis Materias
             </Link>
             <Link
-              href={"dashboard/edit/" + session.user.id}
+              href="dashboard/edit"
               className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2 "
             >
               {estudiante ? "Editar" : "Completar perfil"}

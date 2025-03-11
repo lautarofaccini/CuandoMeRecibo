@@ -1,6 +1,6 @@
 import FormPerfil from "./FormPerfil";
 
-function EditPage() {
+async function EditPage() {
   return (
     <div className="flex justify-center items-center h-full">
       <FormPerfil />

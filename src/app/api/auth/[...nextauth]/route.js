@@ -43,12 +43,22 @@ export const authOptions = {
   ],
   callbacks: {
     async session({ session, token }) {
-      if (session?.user) {
-        session.user.id = token.sub;
+      // Realizar una consulta a la DB para obtener el usuario actualizado
+      const [userFound] = await conn.query(
+        "SELECT id, username, email FROM usuarios WHERE id = ?",
+        [token.sub]
+      );
+      if (userFound) {
+        session.user = {
+          id: userFound.id,
+          name: userFound.username,
+          email: userFound.email,
+        };
       }
       return session;
     },
   },
+
   pages: {
     signIn: "/auth/login",
   },

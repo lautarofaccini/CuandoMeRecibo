@@ -40,7 +40,6 @@ function FormEstudiantes() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!params.id) {
       //Crear el usuario, recuperar el id generado y asignarlo al estudiante
       const { data } = await axios.post("/api/auth/register", {
