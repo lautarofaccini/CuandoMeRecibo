@@ -8,7 +8,7 @@ function NavigationButtons({ paramId, maxPages }) {
       {paramId != 1 && (
         <Button
           className="bg-blue-500 hover:bg-blue-700 py-2 px-3 rounded"
-          onClick={() => {
+          onPress={() => {
             const prevId = parseInt(paramId, 10) - 1;
             router.push("/materias/" + prevId);
           }}
@@ -19,7 +19,7 @@ function NavigationButtons({ paramId, maxPages }) {
       {paramId < maxPages && (
         <Button
           className="bg-blue-500 hover:bg-blue-700 py-2 px-3 rounded"
-          onClick={() => {
+          onPress={() => {
             const nextId = parseInt(paramId, 10) + 1;
             router.push("/materias/" + nextId);
           }}

@@ -43,12 +43,14 @@ async function DashboardPage() {
             )}
           </div>
           <div className="flex justify-end">
-            <Link
-              href="dashboard/mis-materias"
-              className=" bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2"
-            >
-              Mis Materias
-            </Link>
+            {estudiante && (
+              <Link
+                href="dashboard/mis-materias"
+                className="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded mt-2 mr-2"
+              >
+                Mis Materias
+              </Link>
+            )}
             <Link
               href="dashboard/edit"
               className=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2 "

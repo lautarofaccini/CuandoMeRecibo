@@ -45,6 +45,7 @@ function CheckboxSet({
 
   return (
     <tr className="border-b hover:bg-gray-50">
+      <td className="py-3 px-4">{materia.id}</td>
       <td className="py-3 px-4">{materia.asignatura}</td>
       <td className="py-3 px-4 text-center">
         <Checkbox

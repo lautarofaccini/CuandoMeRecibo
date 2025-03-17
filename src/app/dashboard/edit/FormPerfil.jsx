@@ -239,7 +239,7 @@ function FormPerfil() {
         placeholderValue={new CalendarDate(1995, 11, 6)}
         onChange={handleDateChange}
       />
-      <Button type="submit">Guardar</Button>
+      <Button type="submit">Guardar (Deshabilitar al enviar)</Button>
     </Form>
   );
 }

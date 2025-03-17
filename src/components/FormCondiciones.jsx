@@ -103,6 +103,7 @@ function FormCondiciones({
                   <table className="w-full border-collapse">
                     <thead className="sticky top-0 bg-white z-10">
                       <tr className="border-b">
+                        <th className="py-3 px-4 text-left font-medium">N°</th>
                         <th className="py-3 px-4 text-left font-medium">
                           Materia
                         </th>
