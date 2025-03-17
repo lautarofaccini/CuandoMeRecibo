@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter, useParams } from "next/navigation";
+import { Button } from "@heroui/react";
 
 function FormMaterias() {
   const [materia, setMateria] = useState({
@@ -12,8 +13,8 @@ function FormMaterias() {
     dictado: "",
     plan: 2023,
   });
-//TODO: Mejorar la carga secuencial, permitiendo cargar el siguiente sin necesidad de volver al inicio y presionar nuevo
-//TODO: Cuando carga el siguiente, que recuerde lo anterior para carga mas eficiente
+  //TODO: Mejorar la carga secuencial, permitiendo cargar el siguiente sin necesidad de volver al inicio y presionar nuevo
+  //TODO: Cuando carga el siguiente, que recuerde lo anterior para carga mas eficiente
   const form = useRef(null);
   const router = useRouter();
   const params = useParams();
@@ -147,9 +148,17 @@ function FormMaterias() {
         value={materia.plan}
         className="shadow bg-white text-black appearance-none border rounded w-full py-2 px-3"
       />
-      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mt-2">
-        Guardar
-      </button>
+      <div className="flex gap-4 mt-6">
+        <Button className="bg-blue-500 hover:bg-blue-700 font-bold">
+          Guardar
+        </Button>
+        <Button
+          onPress={() => setContinue()}
+          className="bg-green-500 hover:bg-green-700 font-bold"
+        >
+          Guardar Más
+        </Button>
+      </div>
     </form>
   );
 }

@@ -13,7 +13,7 @@ export async function POST(request) {
     const userFound = femail[0];
     if (userFound) {
       return NextResponse.json(
-        { message: "El usuario ya existe" },
+        { message: "El correo ya está en uso" },
         { status: 400 }
       );
     }

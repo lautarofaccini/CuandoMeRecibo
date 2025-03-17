@@ -1,84 +1,83 @@
 "use client";
-import { useForm } from "react-hook-form";
-import { Button } from "@heroui/react";
+import React, { useState } from "react";
+import { Form, Input, Button } from "@heroui/react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 
 function LoginPage() {
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const [errors, setErrors] = useState({});
+  const [errorMessage, setErrorMessage] = useState(null);
   const router = useRouter();
-  const [error, setError] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
-  const onSubmit = handleSubmit(async (data) => {
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    const data = Object.fromEntries(new FormData(e.currentTarget));
+    const newErrors = {};
+
+    if (!data.email) newErrors.email = "Correo requerido";
+    if (!data.password) newErrors.password = "Contraseña requerida";
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     const res = await signIn("credentials", {
       email: data.email,
       password: data.password,
       redirect: false,
     });
+
     if (res.ok) {
       router.push("/dashboard");
       router.refresh();
     } else {
-      setError(res.error);
+      setErrorMessage(res.error);
     }
-  });
+    setSubmitting(false);
+  };
 
   return (
     <div className="h-[calc(100vh-7rem)] flex justify-center items-center">
-      <form className="w-1/4" onSubmit={onSubmit}>
-        {error && (
-          <p className=" bg-red-500 text-lg text-white p-3 rounded">{error}</p>
+      <Form
+        className="w-1/4 flex flex-col gap-4"
+        validationErrors={errors}
+        onSubmit={onSubmit}
+      >
+        {errorMessage && (
+          <p className="bg-red-500 text-lg text-white p-3 rounded ">
+            {errorMessage}
+          </p>
         )}
         <h1 className="text-slate-200 font-bold text-3xl mb-4">
           Iniciar Sesión
         </h1>
-        <label className="text-slate-200 mb-2 block text-sm" htmlFor="email">
-          Correo:
-        </label>
-        <input
-          className="p-3 rounded block mb-2 bg-slate-900 text-slate-300 w-full"
-          type="email"
+        <Input
+          isRequired
+          errorMessage={errors.email}
+          label="Correo"
+          labelPlacement="outside"
+          name="email"
           placeholder="correo@email.com"
-          {...register("email", {
-            required: {
-              value: true,
-              message: "Correo requerido",
-            },
-          })}
+          type="email"
         />
-        {errors.email && (
-          <span className="text-red-500 text-xs">{errors.email.message}</span>
-        )}
-        <label className="text-slate-200 mb-2 block text-sm" htmlFor="password">
-          Contraseña:
-        </label>
-        <input
-          className="p-3 rounded block mb-2 bg-slate-900 text-slate-300 w-full"
-          type="password"
+        <Input
+          isRequired
+          errorMessage={errors.password}
+          label="Contraseña"
+          labelPlacement="outside"
+          name="password"
           placeholder="********"
-          {...register("password", {
-            required: {
-              value: true,
-              message: "Contraseña requerida",
-            },
-          })}
+          type="password"
         />
-        {errors.password && (
-          <span className="text-red-500 text-xs">
-            {errors.password.message}
-          </span>
-        )}
         <div className="flex justify-end">
-          <Button type="submit" className="bg-blue-500 mt-2">
-            Enviar
+          <Button color="primary" type="submit" isDisabled={submitting}>
+            {submitting ? "Enviando" : "Enviar"}
           </Button>
         </div>
-      </form>
+      </Form>
     </div>
   );
 }

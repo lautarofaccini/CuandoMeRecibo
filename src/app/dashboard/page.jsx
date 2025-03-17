@@ -10,7 +10,7 @@ async function fetchEstudiante(id) {
     );
     return estudiante;
   } catch (error) {
-    if (error.response === 404) {
+    if (error.status === 404) {
       return null;
     } else {
       console.log(error);
